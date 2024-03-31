@@ -13,7 +13,7 @@
 
 using namespace std;
 int sound_diff(string input1, string input2);
-int store_audio_data(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<float[]>[]> &input_buffer);
+int store_audio_data(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<float[]>[]>& input_buffer);
 int test_read_function(char* input_filename);
 int test_write_function(char* input_filename);
 
@@ -109,11 +109,13 @@ int sound_diff(string input1, string input2) {
 	std::unique_ptr<std::unique_ptr<float []>[]> input_buffer2(new std::unique_ptr<float[]>[wav_handle_input2->header.num_channels]);
 	std::unique_ptr<std::unique_ptr<float []>[]> diff_buffer(new std::unique_ptr<float[]>[wav_handle_input1->header.num_channels]);
 	std::unique_ptr<float []> max_diff_buffer(new float[wav_handle_input1->header.num_channels]);
+	std::unique_ptr<unsigned int []> max_diff_index(new unsigned int[wav_handle_input1->header.num_channels]);
 	for (auto n_ch = 0; n_ch < wav_handle_input1->header.num_channels; n_ch++) {
 		input_buffer1[n_ch] = std::make_unique<float[]>(wav_handle_input1->num_samples);
 		input_buffer2[n_ch] = std::make_unique<float[]>(wav_handle_input2->num_samples);
 		diff_buffer[n_ch] = std::make_unique<float[]>(wav_handle_input1->num_samples);
 		max_diff_buffer[n_ch] = 0.0f;
+		max_diff_index[n_ch] = 0;
 	}
 
 	// compare audio data
@@ -133,10 +135,11 @@ int sound_diff(string input1, string input2) {
 			diff_buffer.get()[n_ch][i_sample] = diff_value;
 			if (diff_value > max_diff_buffer[n_ch]) {
 				max_diff_buffer[n_ch] = diff_value;
+				max_diff_index[n_ch] = i_sample;
 			}
 		}
 		// display result
-		cout << "	max different value " << n_ch << "ch: " <<  20 * log10(max_diff_buffer[n_ch]) << " [dB]" << endl;
+		cout << "	max different value " << n_ch << "ch: " <<  20 * log10(max_diff_buffer[n_ch]) << " [dB] at " << max_diff_index[n_ch] << " sample" << endl;
 	}
 
 	// close
