@@ -154,7 +154,7 @@ int store_audio_data(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<flo
 		// format conversion
 		if (wav_handle->header.format == 0x01) { //PCM int data
 			// alloc read buffer
-			std::unique_ptr<char[]> read_buffer(new char[wav_handle->header.data_size]);
+			std::unique_ptr<unsigned char[]> read_buffer(new unsigned char[wav_handle->header.data_size]);
 			// data read
 			wav_fread(wav_handle, read_buffer.get(), wav_handle->header.data_size);
 			if (wav_handle->header.bits_per_samples == 16) {
