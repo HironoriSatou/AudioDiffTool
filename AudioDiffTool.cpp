@@ -252,7 +252,7 @@ int test_write_function(char* input_filename) {
 	BitsPersample = wav_handle_read->header.bits_per_samples;
 	ch = wav_handle_read->header.num_channels;
 
-	rtn = wav_fopen_write(wav_handle_write.get(), ".\\TestData\\output2.wav", fs, BitsPersample, ch);
+	rtn = wav_fopen_write(wav_handle_write.get(), ".\\TestData\\output2.wav", fs, BitsPersample, ch, "int");
 	if (rtn != 0) {
 		cout << "File open failed" << endl;
 		return rtn;

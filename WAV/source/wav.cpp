@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "wav.h"
 
 using namespace std;
@@ -22,7 +23,7 @@ int wav_fopen_read(WAV_HANDLE* wav_handle, const char* input_filename) {
 	return 0;
 }
 
-int wav_fopen_write(WAV_HANDLE* wav_handle, const char* filename, int fs, int BitsPersample, int ch) {
+int wav_fopen_write(WAV_HANDLE* wav_handle, const char* filename, int fs, int BitsPersample, int ch, std::string wav_format) {
 	errno_t error = 0;
 	WAV_HEADER header;
 
@@ -43,7 +44,17 @@ int wav_fopen_write(WAV_HANDLE* wav_handle, const char* filename, int fs, int Bi
 	header.num_channels = ch;
 	header.block_size = ch * BitsPersample / 8;
 	header.bytes_per_sec = fs * header.block_size;
-	header.format = 0x01;
+	if (wav_format == "int") {
+		header.format = 0x01;
+	}
+	else if (wav_format == "float") {
+		header.format = 0x03;
+	}
+	else {
+		cout << "wav_format is not supported" << endl;
+		return -1;
+	}
+	
 	fwrite(&header, sizeof(WAV_HEADER), 1, wav_handle->fp);
 
 	return 0;

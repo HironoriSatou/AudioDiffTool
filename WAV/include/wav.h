@@ -1,4 +1,6 @@
 #pragma once
+#include <iostream>
+#include <string>
 #include <stdio.h>
 
 struct WAV_HEADER {
@@ -26,7 +28,7 @@ struct WAV_HANDLE {
 };
 
 int wav_fopen_read(WAV_HANDLE* wav_handle, const char* input_filename);
-int wav_fopen_write(WAV_HANDLE* wav_handle, const char* input_filename, int fs, int BitsPersample, int ch);
+int wav_fopen_write(WAV_HANDLE* wav_handle, const char* input_filename, int fs, int BitsPersample, int ch, std::string wav_format);
 int wav_fclose(WAV_HANDLE* wav_handle);
 int wav_fread(WAV_HANDLE* wav_handle, void* read_buffer, size_t read_size_byte);
 int wav_fwrite(WAV_HANDLE* wav_handle, void* write_buffer, size_t write_size_byte);
