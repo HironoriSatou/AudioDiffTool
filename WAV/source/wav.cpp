@@ -18,7 +18,7 @@ int wav_fopen_read(WAV_HANDLE* wav_handle, const char* input_filename) {
 		return -1;
 	}
 	error = fread_s(&wav_handle->header, sizeof(WAV_HEADER), sizeof(WAV_HEADER), 1, wav_handle->fp);
-	wav_handle->num_samples = wav_handle->header.data_size / wav_handle->header.num_channels / wav_handle->header.bits_per_samples * 8;
+	wav_handle->num_samples = wav_handle->header.data_size_byte / wav_handle->header.num_channels / wav_handle->header.bits_per_samples * 8;
 	wav_handle->mode = 1; // read mode
 	return 0;
 }

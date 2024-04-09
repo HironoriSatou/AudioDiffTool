@@ -1,40 +1,13 @@
-#include <iostream>
-#include <string>
-#include <memory>
-#include <bitset>
-#include "wav.h"
+#include "AudioDiffTool.h"
 
-
-#ifdef _DEBUG
-	#define _CRTDBG_MAP_ALLOC
-	#include <stdlib.h>
-	#include <crtdbg.h>
-#endif // _DEBUG
-
-using namespace std;
-int CompareSoundDispResult(string input1, string input2);
-int StoreSoundData(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<float[]>[]>& input_buffer);
-int TestReadWavFile(char* input_filename);
-int TestWriteWavFile(char* input_filename);
-
-int main(int argc, char* argv[]) {
-
-	int rtn = 0;
-
-	rtn = CompareSoundDispResult(argv[1], argv[2]);
-	if (rtn != 0) {
-		cout << "test_sound_diff failed" << endl;
-		return rtn;
-	}
-
-#ifdef _DEBUG
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
-	_CrtDumpMemoryLeaks();
-#endif
-	return 0;
+AudioDiffToolResult::AudioDiffToolResult() {
+	num_ch = 0;
+	memset(max_diff_dB, 0, ADT_MAX_CH_NUM * sizeof(float));
+	memset(max_diff_index, 0, ADT_MAX_CH_NUM * sizeof(int));
 }
 
-int CompareSoundDispResult(string input1, string input2) {
+using namespace std;
+int CompareSoundDispResult(AudioDiffToolResult* result, string input1, string input2) {
 	int rtn = 0;
 	int compare_length = 0;
 	std::unique_ptr<WAV_HANDLE> wav_handle_input1(new WAV_HANDLE);
@@ -76,6 +49,10 @@ int CompareSoundDispResult(string input1, string input2) {
 	}
 	if (wav_handle_input1->header.num_channels != wav_handle_input2->header.num_channels) {
 		cout << "Error, number of chanels not matched" << endl;
+		return -1;
+	}
+	if (wav_handle_input1->header.num_channels > ADT_MAX_CH_NUM) {
+		cout << "Error, number of channels greater than the specified number has been entered" << endl;
 		return -1;
 	}
 	if (wav_handle_input1->num_samples != wav_handle_input2->num_samples) {
@@ -125,74 +102,92 @@ int CompareSoundDispResult(string input1, string input2) {
 				max_diff_index[n_ch] = i_sample;
 			}
 		}
+		result->max_diff_dB[n_ch] = 20 * log10(max_diff_buffer[n_ch]);
+		result->max_diff_index[n_ch] = max_diff_index[n_ch];
 		cout << "	max different value " << n_ch << "ch: " <<  20 * log10(max_diff_buffer[n_ch]) << " [dB] at " << max_diff_index[n_ch] << " sample" << endl;
 	}
 
-	rtn = wav_fclose(wav_handle_input1.get());
-	rtn = wav_fclose(wav_handle_input2.get());
+	wav_fclose(wav_handle_input1.get());
+	wav_fclose(wav_handle_input2.get());
+
+	result->num_ch = wav_handle_input1->header.num_channels;
 	return 0;
 }
 
 int StoreSoundData(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<float[]>[]>& input_buffer) {
-	
-	for (auto n_ch = 0; n_ch < wav_handle->header.num_channels; n_ch++) {
-		// file read and type conversion
-		if (wav_handle->header.format == 0x01) { //PCM int data
-			std::unique_ptr<unsigned char[]> read_buffer(new unsigned char[wav_handle->header.data_size]);
-			wav_fread(wav_handle, read_buffer.get(), wav_handle->header.data_size);
-			if (wav_handle->header.bits_per_samples == 16) {
-				auto n_sample = 0;
-				for (auto n_byte = 0; n_byte < wav_handle->header.data_size; n_byte += 2) {
-					std::bitset<16> bs1 = (read_buffer[n_byte]) & 0x00ff;
-					std::bitset<16> bs2 = (read_buffer[n_byte + 1]) & 0x00ff;
+		
+	// file read and type conversion
+	if (wav_handle->header.format == 0x01) { //PCM int data
+		std::unique_ptr<unsigned char[]> read_buffer(new unsigned char[wav_handle->header.data_size_byte]);
+		wav_fread(wav_handle, read_buffer.get(), wav_handle->header.data_size_byte);		
+		if (wav_handle->header.bits_per_samples == 16) {
+			auto n_sample = 0;
+			for (auto n_byte = 0; n_byte < wav_handle->header.data_size_byte; n_byte += 2 * wav_handle->header.num_channels) {
+				for (auto n_ch = 0; n_ch < wav_handle->header.num_channels; n_ch++) {
+					std::bitset<16> bs1 = (read_buffer[n_byte + n_ch * 2 + 0]) & 0x00ff;
+					std::bitset<16> bs2 = (read_buffer[n_byte + n_ch * 2 + 1]) & 0x00ff;
 					std::bitset<16> bs_or = (bs1 | (bs2 << 8));
 					short sample_data = (short)bs_or.to_ulong();
-					input_buffer.get()[n_ch][n_sample++] = ((float)sample_data) / (int)(0x01 << 15);
+					input_buffer[n_ch][n_sample] = ((float)sample_data) / (int)(0x01 << 15);
 				}
+				n_sample++;
 			}
-			else if (wav_handle->header.bits_per_samples == 24) {
-				auto n_sample = 0;
-				for (auto n_byte = 0; n_byte < wav_handle->header.data_size; n_byte += 3) {
-					std::bitset<32> bs1 = (read_buffer[n_byte]) & 0x000000ff;
-					std::bitset<32> bs2 = (read_buffer[n_byte + 1]) & 0x000000ff;
-					std::bitset<32> bs3 = (read_buffer[n_byte + 2]) & 0x000000ff;
+		}
+		else if (wav_handle->header.bits_per_samples == 24) {
+			auto n_sample = 0;
+			for (auto n_byte = 0; n_byte < wav_handle->header.data_size_byte; n_byte += 3 * wav_handle->header.num_channels) {
+				for (auto n_ch = 0; n_ch < wav_handle->header.num_channels; n_ch++) {
+					std::bitset<32> bs1 = (read_buffer[n_byte + n_ch * 3 + 0]) & 0x000000ff;
+					std::bitset<32> bs2 = (read_buffer[n_byte + n_ch * 3 + 1]) & 0x000000ff;
+					std::bitset<32> bs3 = (read_buffer[n_byte + n_ch * 3 + 2]) & 0x000000ff;
 					if (bs3[7] == 1) {
 						bs3 |= 0xffffff00;
 					}
 					std::bitset<32> bs_or = (bs1 | (bs2 << 8) | (bs3 << 16));
 					int sample_data = (int)bs_or.to_ullong();
-					input_buffer.get()[n_ch][n_sample++] = ((float)sample_data) / (int)(0x01 << 23);
+					input_buffer[n_ch][n_sample] = ((float)sample_data) / (int)(0x01 << 23);
 				}
+				n_sample++;
 			}
-			else if (wav_handle->header.bits_per_samples == 32) {
-				auto n_sample = 0;
-				for (auto n_byte = 0; n_byte < wav_handle->header.data_size; n_byte += 4) {
-					std::bitset<32> bs1 = (read_buffer[n_byte]) & 0x000000ff;
-					std::bitset<32> bs2 = (read_buffer[n_byte + 1]) & 0x000000ff;
-					std::bitset<32> bs3 = (read_buffer[n_byte + 2]) & 0x000000ff;
-					std::bitset<32> bs4 = (read_buffer[n_byte + 3]) & 0x000000ff;
+		}
+		else if (wav_handle->header.bits_per_samples == 32) {
+			auto n_sample = 0;
+			for (auto n_byte = 0; n_byte < wav_handle->header.data_size_byte; n_byte += 4 * wav_handle->header.num_channels) {
+				for (auto n_ch = 0; n_ch < wav_handle->header.num_channels; n_ch++) {
+					std::bitset<32> bs1 = (read_buffer[n_byte + n_ch * 4 + 0]) & 0x000000ff;
+					std::bitset<32> bs2 = (read_buffer[n_byte + n_ch * 4 + 1]) & 0x000000ff;
+					std::bitset<32> bs3 = (read_buffer[n_byte + n_ch * 4 + 2]) & 0x000000ff;
+					std::bitset<32> bs4 = (read_buffer[n_byte + n_ch * 4 + 3]) & 0x000000ff;
 					if (bs4[7] == 1) {
 						bs4 |= 0xffffff00;
 					}
 					std::bitset<32> bs_or = (bs1 | (bs2 << 8) | (bs3 << 16) | (bs4 << 24));
 					int sample_data = (int)bs_or.to_ullong();
-					input_buffer.get()[n_ch][n_sample++] = ((float)sample_data) / (unsigned int)(0x01 << 31);
+					input_buffer[n_ch][n_sample] = ((float)sample_data) / (unsigned int)(0x01 << 31);
 				}
+				n_sample++;
 			}
-			else {
-				cout << "Error! input file format unsupported" << endl;
-				return -1;
-			}
-		}
-		else if (wav_handle->header.format == 0x03) { //PCM 32bit float data
-			wav_fread(wav_handle, input_buffer.get()[n_ch].get(), wav_handle->header.data_size);
 		}
 		else {
 			cout << "Error! input file format unsupported" << endl;
 			return -1;
 		}
-	}	
-
+	}
+	else if (wav_handle->header.format == 0x03) { //PCM 32bit float data
+		std::unique_ptr<float[]> read_buffer(new float[wav_handle->num_samples]);
+		wav_fread(wav_handle, read_buffer.get(), wav_handle->header.data_size_byte);
+		// Interleave to block conversion
+		auto n_sample = 0;
+		for (auto dst_sample = 0; dst_sample < wav_handle->num_samples; dst_sample++) {
+			for (auto n_ch = 0; n_ch < wav_handle->header.num_channels; n_ch++) {
+				input_buffer.get()[n_ch][dst_sample] = read_buffer[n_sample++];
+			}
+		}
+	}
+	else {
+		cout << "Error! input file format unsupported" << endl;
+		return -1;
+	}
 	return 0;
 }
 
@@ -207,8 +202,8 @@ int TestReadWavFile(char* input_filename) {
 	}
 
 	std::unique_ptr<short> read_buffer(new short[wav_handle->num_samples]);
-	rtn = wav_fread(wav_handle.get(), read_buffer.get(), wav_handle->num_samples * sizeof(short));
-	rtn = wav_fclose(wav_handle.get());
+	wav_fread(wav_handle.get(), read_buffer.get(), wav_handle->num_samples * sizeof(short));
+	wav_fclose(wav_handle.get());
 	return 0;
 }
 
@@ -237,13 +232,13 @@ int TestWriteWavFile(char* input_filename) {
 	}
 
 	std::unique_ptr<short> read_buffer(new short[wav_handle_read->num_samples]);
-	rtn = wav_fread(wav_handle_read.get(), read_buffer.get(), wav_handle_read->num_samples * sizeof(short));
+	wav_fread(wav_handle_read.get(), read_buffer.get(), wav_handle_read->num_samples * sizeof(short));
 
 	memset(read_buffer.get(), 0, wav_handle_read->num_samples * sizeof(short));
-	rtn = wav_fwrite(wav_handle_write.get(), read_buffer.get(), wav_handle_read->num_samples * sizeof(short));
+	wav_fwrite(wav_handle_write.get(), read_buffer.get(), wav_handle_read->num_samples * sizeof(short));
 
-	rtn = wav_fclose(wav_handle_read.get());
-	rtn = wav_fclose(wav_handle_write.get());
+	wav_fclose(wav_handle_read.get());
+	wav_fclose(wav_handle_write.get());
 	return 0;
 }
 

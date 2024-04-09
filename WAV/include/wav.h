@@ -16,7 +16,7 @@ struct WAV_HEADER {
 	short	block_size = 0;
 	short	bits_per_samples = 0;
 	char	data[4] = {'d', 'a', 't', 'a'};
-	int		data_size = 0;
+	int		data_size_byte = 0;
 };
 
 struct WAV_HANDLE {

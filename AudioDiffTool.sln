@@ -15,6 +15,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestInputGenerator", "TestI
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WAV", "WAV\WAV.vcxproj", "{FC055C4F-3173-4500-A370-503716C97B90}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AudioDiffToolUnitTest", "AudioDiffToolUnitTest\AudioDiffToolUnitTest.vcxproj", "{92766DF3-767A-4D9A-8949-3AA9E454E1AD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2B76DEBD-BB2C-40DF-BB6E-F2FD5E01DC7A} = {2B76DEBD-BB2C-40DF-BB6E-F2FD5E01DC7A}
+		{61F70FB1-71A7-425B-832D-51660CBE85BF} = {61F70FB1-71A7-425B-832D-51660CBE85BF}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AudioDiffToolSample", "AudioDiffToolSample\AudioDiffToolSample.vcxproj", "{12E2321A-05A2-4F5B-97DF-F65D140FB3AD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestInputGeneratorSample", "TestInputGeneratorSample\TestInputGeneratorSample.vcxproj", "{9103602C-01D0-4CED-91A6-CDB78E304ED8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -47,6 +57,30 @@ Global
 		{FC055C4F-3173-4500-A370-503716C97B90}.Release|x64.Build.0 = Release|x64
 		{FC055C4F-3173-4500-A370-503716C97B90}.Release|x86.ActiveCfg = Release|Win32
 		{FC055C4F-3173-4500-A370-503716C97B90}.Release|x86.Build.0 = Release|Win32
+		{92766DF3-767A-4D9A-8949-3AA9E454E1AD}.Debug|x64.ActiveCfg = Debug|x64
+		{92766DF3-767A-4D9A-8949-3AA9E454E1AD}.Debug|x64.Build.0 = Debug|x64
+		{92766DF3-767A-4D9A-8949-3AA9E454E1AD}.Debug|x86.ActiveCfg = Debug|Win32
+		{92766DF3-767A-4D9A-8949-3AA9E454E1AD}.Debug|x86.Build.0 = Debug|Win32
+		{92766DF3-767A-4D9A-8949-3AA9E454E1AD}.Release|x64.ActiveCfg = Release|x64
+		{92766DF3-767A-4D9A-8949-3AA9E454E1AD}.Release|x64.Build.0 = Release|x64
+		{92766DF3-767A-4D9A-8949-3AA9E454E1AD}.Release|x86.ActiveCfg = Release|Win32
+		{92766DF3-767A-4D9A-8949-3AA9E454E1AD}.Release|x86.Build.0 = Release|Win32
+		{12E2321A-05A2-4F5B-97DF-F65D140FB3AD}.Debug|x64.ActiveCfg = Debug|x64
+		{12E2321A-05A2-4F5B-97DF-F65D140FB3AD}.Debug|x64.Build.0 = Debug|x64
+		{12E2321A-05A2-4F5B-97DF-F65D140FB3AD}.Debug|x86.ActiveCfg = Debug|Win32
+		{12E2321A-05A2-4F5B-97DF-F65D140FB3AD}.Debug|x86.Build.0 = Debug|Win32
+		{12E2321A-05A2-4F5B-97DF-F65D140FB3AD}.Release|x64.ActiveCfg = Release|x64
+		{12E2321A-05A2-4F5B-97DF-F65D140FB3AD}.Release|x64.Build.0 = Release|x64
+		{12E2321A-05A2-4F5B-97DF-F65D140FB3AD}.Release|x86.ActiveCfg = Release|Win32
+		{12E2321A-05A2-4F5B-97DF-F65D140FB3AD}.Release|x86.Build.0 = Release|Win32
+		{9103602C-01D0-4CED-91A6-CDB78E304ED8}.Debug|x64.ActiveCfg = Debug|x64
+		{9103602C-01D0-4CED-91A6-CDB78E304ED8}.Debug|x64.Build.0 = Debug|x64
+		{9103602C-01D0-4CED-91A6-CDB78E304ED8}.Debug|x86.ActiveCfg = Debug|Win32
+		{9103602C-01D0-4CED-91A6-CDB78E304ED8}.Debug|x86.Build.0 = Debug|Win32
+		{9103602C-01D0-4CED-91A6-CDB78E304ED8}.Release|x64.ActiveCfg = Release|x64
+		{9103602C-01D0-4CED-91A6-CDB78E304ED8}.Release|x64.Build.0 = Release|x64
+		{9103602C-01D0-4CED-91A6-CDB78E304ED8}.Release|x86.ActiveCfg = Release|Win32
+		{9103602C-01D0-4CED-91A6-CDB78E304ED8}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
