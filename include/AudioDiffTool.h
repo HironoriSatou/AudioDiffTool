@@ -12,6 +12,10 @@
 #endif // _DEBUG
 
 #define ADT_MAX_CH_NUM 128
+#define ADT_ERROR_FILE_OPEN	(-1)
+#define ADT_ERROR_FS		(-2)
+#define ADT_ERROR_NUM_CH	(-3)
+#define ADT_ERROR_RUNTIME	(-4)
 
 struct AudioDiffToolResult
 {

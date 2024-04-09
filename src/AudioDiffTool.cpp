@@ -16,12 +16,12 @@ int CompareSoundDispResult(AudioDiffToolResult* result, string input1, string in
 	rtn = wav_fopen_read(wav_handle_input1.get(), input1.data());
 	if (rtn != 0) {
 		cout << "File1 open failed" << endl;
-		return rtn;
+		return ADT_ERROR_FILE_OPEN;
 	}
 	rtn = wav_fopen_read(wav_handle_input2.get(), input2.data());
 	if (rtn != 0) {
 		cout << "File2 open failed" << endl;
-		return rtn;
+		return ADT_ERROR_FILE_OPEN;
 	}
 
 	cout << "\n" << endl;
@@ -45,15 +45,15 @@ int CompareSoundDispResult(AudioDiffToolResult* result, string input1, string in
 	// file check
 	if (wav_handle_input1->header.fs != wav_handle_input2->header.fs) {
 		cout << "Error, fs not matched" << endl;
-		return -1;
+		return ADT_ERROR_FS;
 	}
 	if (wav_handle_input1->header.num_channels != wav_handle_input2->header.num_channels) {
 		cout << "Error, number of chanels not matched" << endl;
-		return -1;
+		return ADT_ERROR_NUM_CH;
 	}
 	if (wav_handle_input1->header.num_channels > ADT_MAX_CH_NUM) {
 		cout << "Error, number of channels greater than the specified number has been entered" << endl;
-		return -1;
+		return ADT_ERROR_NUM_CH;
 	}
 	if (wav_handle_input1->num_samples != wav_handle_input2->num_samples) {
 		cout << "Warning, number of samples not matched, compare by shorter length" << endl;
@@ -83,20 +83,20 @@ int CompareSoundDispResult(AudioDiffToolResult* result, string input1, string in
 	}
 
 	// compare audio data
+	rtn = StoreSoundData(wav_handle_input1.get(), input_buffer1);
+	if (rtn != 0) {
+		cout << "store audio data failed" << endl;
+		return ADT_ERROR_RUNTIME;
+	}
+	rtn = StoreSoundData(wav_handle_input2.get(), input_buffer2);
+	if (rtn != 0) {
+		cout << "store audio data failed" << endl;
+		return ADT_ERROR_RUNTIME;
+	}
 	for (auto n_ch = 0; n_ch < wav_handle_input1->header.num_channels; n_ch++) {
-		rtn = StoreSoundData(wav_handle_input1.get(), input_buffer1);
-		if (rtn != 0) {
-			cout << "store audio data failed" << endl;
-			return rtn;
-		}
-		rtn = StoreSoundData(wav_handle_input2.get(), input_buffer2);
-		if (rtn != 0) {
-			cout << "store audio data failed" << endl;
-			return rtn;
-		}
 		for (auto i_sample = 0; i_sample < compare_length; i_sample++) {
-			float diff_value = abs(input_buffer1.get()[n_ch][i_sample] - input_buffer2.get()[n_ch][i_sample]);
-			diff_buffer.get()[n_ch][i_sample] = diff_value;
+			float diff_value = abs(input_buffer1[n_ch][i_sample] - input_buffer2[n_ch][i_sample]);
+			diff_buffer[n_ch][i_sample] = diff_value;
 			if (diff_value > max_diff_buffer[n_ch]) {
 				max_diff_buffer[n_ch] = diff_value;
 				max_diff_index[n_ch] = i_sample;
@@ -109,7 +109,6 @@ int CompareSoundDispResult(AudioDiffToolResult* result, string input1, string in
 
 	wav_fclose(wav_handle_input1.get());
 	wav_fclose(wav_handle_input2.get());
-
 	result->num_ch = wav_handle_input1->header.num_channels;
 	return 0;
 }
@@ -174,13 +173,13 @@ int StoreSoundData(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<float
 		}
 	}
 	else if (wav_handle->header.format == 0x03) { //PCM 32bit float data
-		std::unique_ptr<float[]> read_buffer(new float[wav_handle->num_samples]);
+		std::unique_ptr<float[]> read_buffer(new float[wav_handle->num_samples * wav_handle->header.num_channels]);
 		wav_fread(wav_handle, read_buffer.get(), wav_handle->header.data_size_byte);
 		// Interleave to block conversion
 		auto n_sample = 0;
 		for (auto dst_sample = 0; dst_sample < wav_handle->num_samples; dst_sample++) {
 			for (auto n_ch = 0; n_ch < wav_handle->header.num_channels; n_ch++) {
-				input_buffer.get()[n_ch][dst_sample] = read_buffer[n_sample++];
+				input_buffer[n_ch][dst_sample] = read_buffer[n_sample++];
 			}
 		}
 	}

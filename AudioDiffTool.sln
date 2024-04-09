@@ -22,8 +22,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AudioDiffToolUnitTest", "Au
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AudioDiffToolSample", "AudioDiffToolSample\AudioDiffToolSample.vcxproj", "{12E2321A-05A2-4F5B-97DF-F65D140FB3AD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{61F70FB1-71A7-425B-832D-51660CBE85BF} = {61F70FB1-71A7-425B-832D-51660CBE85BF}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestInputGeneratorSample", "TestInputGeneratorSample\TestInputGeneratorSample.vcxproj", "{9103602C-01D0-4CED-91A6-CDB78E304ED8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2B76DEBD-BB2C-40DF-BB6E-F2FD5E01DC7A} = {2B76DEBD-BB2C-40DF-BB6E-F2FD5E01DC7A}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
