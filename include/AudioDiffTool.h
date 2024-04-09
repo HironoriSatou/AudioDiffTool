@@ -30,5 +30,5 @@ private:
 
 int CompareSoundDispResult(AudioDiffToolResult* result, std::string input1, std::string input2);
 int StoreSoundData(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<float[]>[]>& input_buffer);
-int TestReadWavFile(char* input_filename);
-int TestWriteWavFile(char* input_filename);
+static int TestReadWavFile(char* input_filename);
+static int TestWriteWavFile(char* input_filename);

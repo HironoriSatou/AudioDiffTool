@@ -201,7 +201,7 @@ int StoreSoundData(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<float
 	return 0;
 }
 
-int TestReadWavFile(char* input_filename) {
+static int TestReadWavFile(char* input_filename) {
 	int rtn = 0;
 	std::unique_ptr<WAV_HANDLE> wav_handle(new WAV_HANDLE);
 	
@@ -217,7 +217,7 @@ int TestReadWavFile(char* input_filename) {
 	return 0;
 }
 
-int TestWriteWavFile(char* input_filename) {
+static int TestWriteWavFile(char* input_filename) {
 	int rtn = 0;
 	int fs = 0;
 	int BitsPersample = 0;

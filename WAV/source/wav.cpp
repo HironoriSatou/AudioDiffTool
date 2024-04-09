@@ -5,8 +5,9 @@
 using namespace std;
 
 int wav_fopen_read(WAV_HANDLE* wav_handle, const char* input_filename) {
-	errno_t error = 0;
 	
+	//TODO: support other wav format such as MATLAB, etc.
+	errno_t error = 0;
 	if (wav_handle == nullptr) {
 		cout << "wav.cpp : wav_handle null" << endl;
 		return -1;
