@@ -16,7 +16,7 @@ namespace AudioDiffToolUnitTest
 			unsigned int length_sample = 48000;
 			float max_dbFS = 0.0f;
 			std::string signal_type = "sin";
-			for (unsigned int num_ch = 1; num_ch <= 14; num_ch++) {
+			for (unsigned int num_ch = 1; num_ch <= 128; num_ch*=2) {
 				for (unsigned int n_bit = 16; n_bit <= 32; n_bit += 8) {
 					GenerateTestInputWavFile("test1.wav", length_sample, num_ch, n_bit, SampleRate, max_dbFS, "int", signal_type);
 					GenerateTestInputWavFile("test2.wav", length_sample, num_ch, n_bit, SampleRate, max_dbFS, "int", signal_type);
@@ -50,7 +50,7 @@ namespace AudioDiffToolUnitTest
 			unsigned int SampleRate = 48000;
 			unsigned int length_sample = 48000;
 			std::string signal_type = "sin";
-			for (unsigned int num_ch = 1; num_ch <= 14; num_ch++) {
+			for (unsigned int num_ch = 1; num_ch <= 128; num_ch*=2) {
 				for (unsigned int n_bit = 16; n_bit <= 32; n_bit += 8) {
 					GenerateTestInputWavFile("test1.wav", length_sample, num_ch, n_bit, SampleRate, max_dbFS1, "int", signal_type);
 					GenerateTestInputWavFile("test2.wav", length_sample, num_ch, n_bit, SampleRate, max_dbFS2, "int", signal_type);
