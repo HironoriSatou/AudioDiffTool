@@ -97,6 +97,13 @@ namespace AudioDiffToolUnitTest
 				remove("test1.wav");
 				remove("test2.wav");
 			}
+			GenerateTestInputWavFile("test1.wav", length_sample, num_ch, 32, SampleRate1, max_dbFS1, "float", signal_type);
+			GenerateTestInputWavFile("test2.wav", length_sample, num_ch, 32, SampleRate2, max_dbFS2, "float", signal_type);
+			AudioDiffToolResult result;
+			int rtn = CompareSoundDispResult(&result, "test1.wav", "test2.wav");
+			Assert::AreEqual(ADT_ERROR_FS, rtn);
+			remove("test1.wav");
+			remove("test2.wav");
 		}
 		TEST_METHOD(AbnormalTest2)
 		{
@@ -113,6 +120,11 @@ namespace AudioDiffToolUnitTest
 				Assert::AreEqual(ADT_ERROR_FILE_OPEN, rtn);
 				remove("test1.wav");
 			}
+			GenerateTestInputWavFile("test1.wav", length_sample, num_ch, 32, SampleRate, max_dbFS1, "float", signal_type);
+			AudioDiffToolResult result;
+			int rtn = CompareSoundDispResult(&result, "test1.wav", "test_not_exist.wav");
+			Assert::AreEqual(ADT_ERROR_FILE_OPEN, rtn);
+			remove("test1.wav");
 		}
 		TEST_METHOD(AbnormalTest3)
 		{
@@ -132,6 +144,13 @@ namespace AudioDiffToolUnitTest
 				remove("test1.wav");
 				remove("test2.wav");
 			}
+			GenerateTestInputWavFile("test1.wav", length_sample, num_ch1, 32, SampleRate, max_dbFS1, "float", signal_type);
+			GenerateTestInputWavFile("test2.wav", length_sample, num_ch2, 32, SampleRate, max_dbFS2, "float", signal_type);
+			AudioDiffToolResult result;
+			int rtn = CompareSoundDispResult(&result, "test1.wav", "test2.wav");
+			Assert::AreEqual(ADT_ERROR_NUM_CH, rtn);
+			remove("test1.wav");
+			remove("test2.wav");
 		}
 		TEST_METHOD(AbnormalTest4)
 		{
@@ -151,6 +170,13 @@ namespace AudioDiffToolUnitTest
 				remove("test1.wav");
 				remove("test2.wav");
 			}
+			GenerateTestInputWavFile("test1.wav", length_sample, num_ch1, 32, SampleRate, max_dbFS1, "float", signal_type);
+			GenerateTestInputWavFile("test2.wav", length_sample, num_ch2, 32, SampleRate, max_dbFS2, "float", signal_type);
+			AudioDiffToolResult result;
+			int rtn = CompareSoundDispResult(&result, "test1.wav", "test2.wav");
+			Assert::AreEqual(ADT_ERROR_NUM_CH, rtn);
+			remove("test1.wav");
+			remove("test2.wav");
 		}
 	};
 }
