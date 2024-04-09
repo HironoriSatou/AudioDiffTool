@@ -12,16 +12,16 @@
 #endif // _DEBUG
 
 using namespace std;
-int sound_diff(string input1, string input2);
-int store_audio_data(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<float[]>[]>& input_buffer);
-int test_read_function(char* input_filename);
-int test_write_function(char* input_filename);
+int CompareSoundDispResult(string input1, string input2);
+int StoreSoundData(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<float[]>[]>& input_buffer);
+int TestReadWavFile(char* input_filename);
+int TestWriteWavFile(char* input_filename);
 
 int main(int argc, char* argv[]) {
 
 	int rtn = 0;
 
-	rtn = sound_diff(argv[1], argv[2]);
+	rtn = CompareSoundDispResult(argv[1], argv[2]);
 	if (rtn != 0) {
 		cout << "test_sound_diff failed" << endl;
 		return rtn;
@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
 	return 0;
 }
 
-int sound_diff(string input1, string input2) {
+int CompareSoundDispResult(string input1, string input2) {
 	int rtn = 0;
 	int compare_length = 0;
 	std::unique_ptr<WAV_HANDLE> wav_handle_input1(new WAV_HANDLE);
@@ -107,12 +107,12 @@ int sound_diff(string input1, string input2) {
 
 	// compare audio data
 	for (auto n_ch = 0; n_ch < wav_handle_input1->header.num_channels; n_ch++) {
-		rtn = store_audio_data(wav_handle_input1.get(), input_buffer1);
+		rtn = StoreSoundData(wav_handle_input1.get(), input_buffer1);
 		if (rtn != 0) {
 			cout << "store audio data failed" << endl;
 			return rtn;
 		}
-		rtn = store_audio_data(wav_handle_input2.get(), input_buffer2);
+		rtn = StoreSoundData(wav_handle_input2.get(), input_buffer2);
 		if (rtn != 0) {
 			cout << "store audio data failed" << endl;
 			return rtn;
@@ -133,7 +133,7 @@ int sound_diff(string input1, string input2) {
 	return 0;
 }
 
-int store_audio_data(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<float[]>[]>& input_buffer) {
+int StoreSoundData(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<float[]>[]>& input_buffer) {
 	
 	for (auto n_ch = 0; n_ch < wav_handle->header.num_channels; n_ch++) {
 		// file read and type conversion
@@ -196,7 +196,7 @@ int store_audio_data(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<flo
 	return 0;
 }
 
-int test_read_function(char* input_filename) {
+int TestReadWavFile(char* input_filename) {
 	int rtn = 0;
 	std::unique_ptr<WAV_HANDLE> wav_handle(new WAV_HANDLE);
 	
@@ -212,7 +212,7 @@ int test_read_function(char* input_filename) {
 	return 0;
 }
 
-int test_write_function(char* input_filename) {
+int TestWriteWavFile(char* input_filename) {
 	int rtn = 0;
 	int fs = 0;
 	int BitsPersample = 0;
