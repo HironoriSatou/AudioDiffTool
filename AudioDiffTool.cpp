@@ -20,22 +20,10 @@ int test_write_function(char* input_filename);
 int main(int argc, char* argv[]) {
 
 	int rtn = 0;
-	//cout << "This is a test" << endl;
-	//rtn = test_read_function(argv[1]);
-	//if (rtn != 0) {
-	//	cout << "test_read_function failed" << endl;
-	//	return rtn;
-	//}
-
-	//rtn = test_write_function(argv[1]);
-	//if (rtn != 0) {
-	//	cout << "test__write_function failed" << endl;
-	//	return rtn;
-	//}
 
 	rtn = sound_diff(argv[1], argv[2]);
 	if (rtn != 0) {
-		cout << "test__sound_diff failed" << endl;
+		cout << "test_sound_diff failed" << endl;
 		return rtn;
 	}
 
@@ -103,7 +91,6 @@ int sound_diff(string input1, string input2) {
 		compare_length = wav_handle_input1->num_samples;
 	}
 
-
 	// allocate buffer
 	std::unique_ptr<std::unique_ptr<float []>[]> input_buffer1(new std::unique_ptr<float[]>[wav_handle_input1->header.num_channels]);
 	std::unique_ptr<std::unique_ptr<float []>[]> input_buffer2(new std::unique_ptr<float[]>[wav_handle_input2->header.num_channels]);
@@ -138,11 +125,9 @@ int sound_diff(string input1, string input2) {
 				max_diff_index[n_ch] = i_sample;
 			}
 		}
-		// display result
 		cout << "	max different value " << n_ch << "ch: " <<  20 * log10(max_diff_buffer[n_ch]) << " [dB] at " << max_diff_index[n_ch] << " sample" << endl;
 	}
 
-	// close
 	rtn = wav_fclose(wav_handle_input1.get());
 	rtn = wav_fclose(wav_handle_input2.get());
 	return 0;
@@ -151,11 +136,9 @@ int sound_diff(string input1, string input2) {
 int store_audio_data(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<float[]>[]>& input_buffer) {
 	
 	for (auto n_ch = 0; n_ch < wav_handle->header.num_channels; n_ch++) {
-		// format conversion
+		// file read and type conversion
 		if (wav_handle->header.format == 0x01) { //PCM int data
-			// alloc read buffer
 			std::unique_ptr<unsigned char[]> read_buffer(new unsigned char[wav_handle->header.data_size]);
-			// data read
 			wav_fread(wav_handle, read_buffer.get(), wav_handle->header.data_size);
 			if (wav_handle->header.bits_per_samples == 16) {
 				auto n_sample = 0;
@@ -217,7 +200,6 @@ int test_read_function(char* input_filename) {
 	int rtn = 0;
 	std::unique_ptr<WAV_HANDLE> wav_handle(new WAV_HANDLE);
 	
-	// file open
 	rtn = wav_fopen_read(wav_handle.get(), input_filename);
 	if (rtn != 0) {
 		cout << "File open failed" << endl;
@@ -225,10 +207,7 @@ int test_read_function(char* input_filename) {
 	}
 
 	std::unique_ptr<short> read_buffer(new short[wav_handle->num_samples]);
-	// data read
 	rtn = wav_fread(wav_handle.get(), read_buffer.get(), wav_handle->num_samples * sizeof(short));
-
-	// file close
 	rtn = wav_fclose(wav_handle.get());
 	return 0;
 }
@@ -242,7 +221,6 @@ int test_write_function(char* input_filename) {
 	std::unique_ptr<WAV_HANDLE> wav_handle_read(new WAV_HANDLE);
 	std::unique_ptr<WAV_HANDLE> wav_handle_write(new WAV_HANDLE);
 
-	// file open
 	rtn = wav_fopen_read(wav_handle_read.get(), input_filename);
 	if (rtn != 0) {
 		cout << "File open failed" << endl;
@@ -259,15 +237,11 @@ int test_write_function(char* input_filename) {
 	}
 
 	std::unique_ptr<short> read_buffer(new short[wav_handle_read->num_samples]);
-	// data read
 	rtn = wav_fread(wav_handle_read.get(), read_buffer.get(), wav_handle_read->num_samples * sizeof(short));
 
-	// data edit
 	memset(read_buffer.get(), 0, wav_handle_read->num_samples * sizeof(short));
-	// data write
 	rtn = wav_fwrite(wav_handle_write.get(), read_buffer.get(), wav_handle_read->num_samples * sizeof(short));
 
-	// file close
 	rtn = wav_fclose(wav_handle_read.get());
 	rtn = wav_fclose(wav_handle_write.get());
 	return 0;

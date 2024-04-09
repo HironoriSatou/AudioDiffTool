@@ -8,8 +8,11 @@
 #include "WAV.h"
 using namespace std;
 
-int NormalizeWriteWavFile(WAV_HANDLE* wav_handle, double* data, unsigned int length_sample, unsigned int num_ch, unsigned int n_bit, unsigned int SampleRate, const char* filename, string wav_format);
-int GenerateTestInputAudio(const char* filename, unsigned int length_sample, unsigned int num_ch, unsigned int n_bit, unsigned int SampleRate, string wav_format, string sound_type);
+int GenerateTestInputAudio(const char* filename, unsigned int length_sample,
+	unsigned int num_ch, unsigned int n_bit, unsigned int SampleRate, float max_dbFS, string wav_format, string sound_type);
+int TypeConvertWriteWavFile(WAV_HANDLE* wav_handle, double* data, unsigned int length_sample, 
+	unsigned int num_ch, unsigned int n_bit, unsigned int SampleRate, const char* filename, string wav_format);
+int NormalizeSignalBuffer(double* data_buffer,unsigned int length_sample, float max_dbFS);
 int GenerateSin(double* buffer, unsigned int length_sample, unsigned int SampleRate, float Freq);
 int GenerateNoise(double* buffer, unsigned int length_sample);
 int Block2Interleave(short* buffer, unsigned int length_sample, unsigned int num_ch);
@@ -20,44 +23,49 @@ int main() {
 	int rtn = 0;
 	cout << "TestInputGeneratorSampleMain" << endl;
 	
-	GenerateTestInputAudio("../test_input_16bit_noise.wav"      , 480000, 4, 16, 48000, "int"  , "noise");
-	GenerateTestInputAudio("../test_input_24bit_noise.wav"      , 480000, 4, 24, 48000, "int"  , "noise");
-	GenerateTestInputAudio("../test_input_32bit_noise.wav"      , 480000, 4, 32, 48000, "int"  , "noise");
-	GenerateTestInputAudio("../test_input_32bit_float_noise.wav", 480000, 4, 32, 48000, "float", "noise");
+	GenerateTestInputAudio("../test_input_16bit_noise.wav"      , 480000, 4, 16, 48000, -6.0f, "int"  , "noise");
+	GenerateTestInputAudio("../test_input_24bit_noise.wav"      , 480000, 4, 24, 48000, -6.0f, "int"  , "noise");
+	GenerateTestInputAudio("../test_input_32bit_noise.wav"      , 480000, 4, 32, 48000, -6.0f, "int"  , "noise");
+	GenerateTestInputAudio("../test_input_32bit_float_noise.wav", 480000, 4, 32, 48000, -6.0f, "float", "noise");
 
-	GenerateTestInputAudio("../test_input_16bit_sin.wav"      , 480000, 4, 16, 48000, "int"  , "sin");
-	GenerateTestInputAudio("../test_input_24bit_sin.wav"      , 480000, 4, 24, 48000, "int"  , "sin");
-	GenerateTestInputAudio("../test_input_32bit_sin.wav"      , 480000, 4, 32, 48000, "int"  , "sin");
-	GenerateTestInputAudio("../test_input_32bit_float_sin.wav", 480000, 4, 32, 48000, "float", "sin");
+	GenerateTestInputAudio("../test_input_16bit_sin.wav"      , 480000, 4, 16, 48000, -20.0f, "int"  , "sin");
+	GenerateTestInputAudio("../test_input_24bit_sin.wav"      , 480000, 4, 24, 48000, -20.0f, "int"  , "sin");
+	GenerateTestInputAudio("../test_input_32bit_sin.wav"      , 480000, 4, 32, 48000, -20.0f, "int"  , "sin");
+	GenerateTestInputAudio("../test_input_32bit_float_sin.wav", 480000, 4, 32, 48000, -20.0f, "float", "sin");
 
-	GenerateTestInputAudio("../test_input_16bit_mute.wav"      , 480000, 4, 16, 48000, "int"  , "mute");
-	GenerateTestInputAudio("../test_input_24bit_mute.wav"      , 480000, 4, 24, 48000, "int"  , "mute");
-	GenerateTestInputAudio("../test_input_32bit_mute.wav"      , 480000, 4, 32, 48000, "int"  , "mute");
-	GenerateTestInputAudio("../test_input_32bit_float_mute.wav", 480000, 4, 32, 48000, "float", "mute");
+	GenerateTestInputAudio("../test_input_16bit_mute.wav"      , 480000, 4, 16, 48000, 0.0f, "int"  , "mute");
+	GenerateTestInputAudio("../test_input_24bit_mute.wav"      , 480000, 4, 24, 48000, 0.0f, "int"  , "mute");
+	GenerateTestInputAudio("../test_input_32bit_mute.wav"      , 480000, 4, 32, 48000, 0.0f, "int"  , "mute");
+	GenerateTestInputAudio("../test_input_32bit_float_mute.wav", 480000, 4, 32, 48000, 0.0f, "float", "mute");
 
 	return 0;
 }
 
 
-int GenerateTestInputAudio(const char* filename, unsigned int length_sample, unsigned int num_ch, unsigned int n_bit, unsigned int SampleRate, string wav_format, string sound_type) {
+int GenerateTestInputAudio(const char* filename, unsigned int length_sample, unsigned int num_ch, 
+	unsigned int n_bit, unsigned int SampleRate, float max_dbFS, string wav_format, string sound_type) {
 
 	WAV_HANDLE write_handle;
+	std::unique_ptr<double[]> signal_buffer_double(new double[length_sample]);
 
-	if (!strcmp(sound_type.c_str(), "noise")) {
-		std::unique_ptr<double[]> signal_buffer_double(new double[length_sample]);
+	if (max_dbFS > 0.0f) {
+		cout << "max_dbFS is over Full Scale" << endl;
+		return -1;
+	}
+	if (sound_type == "noise") {
 		GenerateNoise(signal_buffer_double.get(), length_sample);
-		NormalizeWriteWavFile(&write_handle, signal_buffer_double.get(), length_sample, num_ch, n_bit, SampleRate, filename, wav_format);
+		NormalizeSignalBuffer(signal_buffer_double.get(), length_sample, max_dbFS);
+		TypeConvertWriteWavFile(&write_handle, signal_buffer_double.get(), length_sample, num_ch, n_bit, SampleRate, filename, wav_format);
 	}
-	else if (!strcmp(sound_type.c_str(), "sin")) {
+	else if (sound_type == "sin") {
 		float Freq = 1000.0;
-		std::unique_ptr<double[]> signal_buffer_double(new double[length_sample]);
 		GenerateSin(signal_buffer_double.get(), length_sample, SampleRate, Freq);
-		NormalizeWriteWavFile(&write_handle, signal_buffer_double.get(), length_sample, num_ch, n_bit, SampleRate, filename, wav_format);
+		NormalizeSignalBuffer(signal_buffer_double.get(), length_sample, max_dbFS);
+		TypeConvertWriteWavFile(&write_handle, signal_buffer_double.get(), length_sample, num_ch, n_bit, SampleRate, filename, wav_format);
 	}
-	else if (!strcmp(sound_type.c_str(), "mute")) {
-		std::unique_ptr<double[]> signal_buffer_double(new double[length_sample]);
+	else if (sound_type == "mute") {
 		memset(signal_buffer_double.get(), 0.0, length_sample * sizeof(double));
-		NormalizeWriteWavFile(&write_handle, signal_buffer_double.get(), length_sample, num_ch, n_bit, SampleRate, filename, wav_format);
+		TypeConvertWriteWavFile(&write_handle, signal_buffer_double.get(), length_sample, num_ch, n_bit, SampleRate, filename, wav_format);
 	}
 	else {
 		cout << "sound type is not supported" << endl;
@@ -67,7 +75,14 @@ int GenerateTestInputAudio(const char* filename, unsigned int length_sample, uns
 	return 0;
 }
 
-int NormalizeWriteWavFile(WAV_HANDLE* wav_handle, double* signal_data_double, unsigned int length_sample, 
+int NormalizeSignalBuffer(double* data_buffer, unsigned int length_sample, float max_dbFS) {
+	for (auto i_sample = 0; i_sample < length_sample; i_sample++) {
+		data_buffer[i_sample] *= pow(10.0, (max_dbFS / 20.0));
+	}
+	return 0;
+}
+
+int TypeConvertWriteWavFile(WAV_HANDLE* wav_handle, double* signal_data_double, unsigned int length_sample, 
 	unsigned int num_ch, unsigned int n_bit, unsigned int SampleRate, const char* filename, string wav_format) {
 	
 	unsigned int write_size_byte = length_sample * num_ch * n_bit / 8;
