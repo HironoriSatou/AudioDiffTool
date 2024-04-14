@@ -76,15 +76,15 @@ int CompareSoundDispResult(AudioDiffToolResult* result, string input1, string in
 	}
 
 	// allocate buffer
-	std::unique_ptr<std::unique_ptr<float []>[]> input_buffer1(new std::unique_ptr<float[]>[wav_handle_input1->header.num_channels]);
-	std::unique_ptr<std::unique_ptr<float []>[]> input_buffer2(new std::unique_ptr<float[]>[wav_handle_input2->header.num_channels]);
-	std::unique_ptr<std::unique_ptr<float []>[]> diff_buffer(new std::unique_ptr<float[]>[wav_handle_input1->header.num_channels]);
+	std::unique_ptr<std::unique_ptr<float []>[]> input_buffer1(new std::unique_ptr<float []>[wav_handle_input1->header.num_channels]);
+	std::unique_ptr<std::unique_ptr<float []>[]> input_buffer2(new std::unique_ptr<float []>[wav_handle_input2->header.num_channels]);
+	std::unique_ptr<std::unique_ptr<float []>[]> diff_buffer(new std::unique_ptr<float []>[wav_handle_input1->header.num_channels]);
 	std::unique_ptr<float []> max_diff_buffer(new float[wav_handle_input1->header.num_channels]);
 	std::unique_ptr<unsigned int []> max_diff_index(new unsigned int[wav_handle_input1->header.num_channels]);
 	for (auto n_ch = 0; n_ch < wav_handle_input1->header.num_channels; n_ch++) {
-		input_buffer1[n_ch] = std::make_unique<float[]>(wav_handle_input1->num_samples);
-		input_buffer2[n_ch] = std::make_unique<float[]>(wav_handle_input2->num_samples);
-		diff_buffer[n_ch] = std::make_unique<float[]>(wav_handle_input1->num_samples);
+		input_buffer1[n_ch] = std::make_unique<float []>(wav_handle_input1->num_samples);
+		input_buffer2[n_ch] = std::make_unique<float []>(wav_handle_input2->num_samples);
+		diff_buffer[n_ch] = std::make_unique<float []>(wav_handle_input1->num_samples);
 		max_diff_buffer[n_ch] = 0.0f;
 		max_diff_index[n_ch] = 0;
 	}
@@ -128,59 +128,39 @@ int StoreSoundData(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<float
 		
 	// file read and type conversion
 	if (wav_handle->header.format == 0x01) { //PCM int data
-		std::unique_ptr<unsigned char[]> read_buffer(new unsigned char[wav_handle->header.data_size_byte]);
-		wav_fread(wav_handle, read_buffer.get(), wav_handle->header.data_size_byte);		
 		if (wav_handle->header.bits_per_samples == 16) {
-			auto n_sample = 0;
-			for (auto n_byte = 0; n_byte < wav_handle->header.data_size_byte; n_byte += 2 * wav_handle->header.num_channels) {
-				for (auto n_ch = 0; n_ch < wav_handle->header.num_channels; n_ch++) {
-					std::bitset<16> bs1 = (read_buffer[n_byte + n_ch * 2 + 0]) & 0x00ff;
-					std::bitset<16> bs2 = (read_buffer[n_byte + n_ch * 2 + 1]) & 0x00ff;
-					std::bitset<16> bs_or = (bs1 | (bs2 << 8));
-					short sample_data = (short)bs_or.to_ulong();
-					input_buffer[n_ch][n_sample] = ((float)sample_data) / (int)(0x01 << 15);
-				}
-				n_sample++;
+			std::unique_ptr<std::unique_ptr<short[]>[]> read_buffer(new std::unique_ptr<short[]>[wav_handle->header.num_channels]);
+			for (auto n_ch = 0; n_ch < wav_handle->header.num_channels; n_ch++) {
+				read_buffer[n_ch] = std::make_unique<short[]>(wav_handle->num_samples);
 			}
-		}
-		else if (wav_handle->header.bits_per_samples == 24) {
-			auto n_sample = 0;
-			for (auto n_byte = 0; n_byte < wav_handle->header.data_size_byte; n_byte += 3 * wav_handle->header.num_channels) {
-				for (auto n_ch = 0; n_ch < wav_handle->header.num_channels; n_ch++) {
-					std::bitset<32> bs1 = (read_buffer[n_byte + n_ch * 3 + 0]) & 0x000000ff;
-					std::bitset<32> bs2 = (read_buffer[n_byte + n_ch * 3 + 1]) & 0x000000ff;
-					std::bitset<32> bs3 = (read_buffer[n_byte + n_ch * 3 + 2]) & 0x000000ff;
-					if (bs3[7] == 1) {
-						bs3 |= 0xffffff00;
-					}
-					std::bitset<32> bs_or = (bs1 | (bs2 << 8) | (bs3 << 16));
-					int sample_data = (int)bs_or.to_ullong();
-					input_buffer[n_ch][n_sample] = ((float)sample_data) / (int)(0x01 << 23);
+			wav_data_load(wav_handle, read_buffer, wav_handle->num_samples);
+			for (auto n_ch = 0; n_ch < wav_handle->header.num_channels; n_ch++) {
+				for (auto n_sample = 0; n_sample < wav_handle->num_samples; n_sample++) {
+					input_buffer[n_ch][n_sample] = ((float)read_buffer[n_ch][n_sample]) / (int)(0x01 << 15);
 				}
-				n_sample++;
-			}
-		}
-		else if (wav_handle->header.bits_per_samples == 32) {
-			auto n_sample = 0;
-			for (auto n_byte = 0; n_byte < wav_handle->header.data_size_byte; n_byte += 4 * wav_handle->header.num_channels) {
-				for (auto n_ch = 0; n_ch < wav_handle->header.num_channels; n_ch++) {
-					std::bitset<32> bs1 = (read_buffer[n_byte + n_ch * 4 + 0]) & 0x000000ff;
-					std::bitset<32> bs2 = (read_buffer[n_byte + n_ch * 4 + 1]) & 0x000000ff;
-					std::bitset<32> bs3 = (read_buffer[n_byte + n_ch * 4 + 2]) & 0x000000ff;
-					std::bitset<32> bs4 = (read_buffer[n_byte + n_ch * 4 + 3]) & 0x000000ff;
-					if (bs4[7] == 1) {
-						bs4 |= 0xffffff00;
-					}
-					std::bitset<32> bs_or = (bs1 | (bs2 << 8) | (bs3 << 16) | (bs4 << 24));
-					int sample_data = (int)bs_or.to_ullong();
-					input_buffer[n_ch][n_sample] = ((float)sample_data) / (unsigned int)(0x01 << 31);
-				}
-				n_sample++;
 			}
 		}
 		else {
-			cout << "Error! input file format unsupported" << endl;
-			return -1;
+			unsigned int normalize_factor = 0;
+			if (wav_handle->header.bits_per_samples == 24) {
+				normalize_factor = (0x01 << 23);
+			}else if (wav_handle->header.bits_per_samples == 32) {
+				normalize_factor = (0x01 << 31);				
+			}
+			else {
+				cout << "Error! input file format unsupported" << endl;
+				return -1;
+			}
+			std::unique_ptr<std::unique_ptr<int[]>[]> read_buffer(new std::unique_ptr<int[]>[wav_handle->header.num_channels]);
+			for (auto n_ch = 0; n_ch < wav_handle->header.num_channels; n_ch++) {
+				read_buffer[n_ch] = std::make_unique<int[]>(wav_handle->num_samples);
+			}
+			wav_data_load(wav_handle, read_buffer, wav_handle->num_samples);
+			for (auto n_ch = 0; n_ch < wav_handle->header.num_channels; n_ch++) {
+				for (auto n_sample = 0; n_sample < wav_handle->num_samples; n_sample++) {
+					input_buffer[n_ch][n_sample] = ((float)read_buffer[n_ch][n_sample]) / normalize_factor;				
+				}
+			}	
 		}
 	}
 	else if (wav_handle->header.format == 0x03) { //PCM 32bit float data

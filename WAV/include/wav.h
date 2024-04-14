@@ -2,6 +2,10 @@
 #include <iostream>
 #include <string>
 #include <stdio.h>
+#include <bitset>
+
+#define MAX_HEADER_SIZE_BYTE 1024
+#define SIZE_OF_INT_24_BIT_BYTE 3
 
 struct WAV_HEADER {
 	char	RIFF[4] = {'R','I','F','F'};
@@ -30,5 +34,8 @@ struct WAV_HANDLE {
 int wav_fopen_read(WAV_HANDLE* wav_handle, const char* input_filename);
 int wav_fopen_write(WAV_HANDLE* wav_handle, const char* input_filename, int fs, int BitsPersample, int ch, std::string wav_format);
 int wav_fclose(WAV_HANDLE* wav_handle);
+int wav_data_load(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<short[]>[]>& data_buffer, unsigned int load_samples);
+int wav_data_load(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<int[]>[]>& data_buffer, unsigned int load_samples);
 int wav_fread(WAV_HANDLE* wav_handle, void* read_buffer, size_t read_size_byte);
 int wav_fwrite(WAV_HANDLE* wav_handle, void* write_buffer, size_t write_size_byte);
+int search_data_chunk(FILE* fp);

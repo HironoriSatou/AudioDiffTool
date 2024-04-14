@@ -79,6 +79,15 @@ namespace AudioDiffToolUnitTest
 				remove("test2.wav");
 			}
 		}
+
+		TEST_METHOD(NormalTest3)
+		{
+			AudioDiffToolResult result;
+			int rtn = CompareSoundDispResult(&result, "..\\..\\TestData\\matlab_float_32bit_wav.wav", "..\\..\\TestData\\matlab_float_32bit_wav2.wav");
+			Assert::AreEqual(0, rtn);
+			Assert::IsTrue(isinf(result.max_diff_dB[0]));
+		}
+
 		TEST_METHOD(AbnormalTest1)
 		{
 			float max_dbFS1 = 0.0f;
