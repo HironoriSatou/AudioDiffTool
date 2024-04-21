@@ -11,8 +11,8 @@
         <Button Content="Input File 2" HorizontalAlignment="Left" Margin="33,69,0,0" VerticalAlignment="Top" Click="Button_Click"/>
         <TextBox x:Name="TextBox1" HorizontalAlignment="Left" Margin="150,37,0,0" TextWrapping="Wrap" Text="Input File 1 Path" VerticalAlignment="Top" Width="320"/>
         <TextBox x:Name="TextBox2" HorizontalAlignment="Left" Margin="150,70,0,0" TextWrapping="Wrap" Text="Input File 2 Path" VerticalAlignment="Top" Width="320"/>
-        <TextBox x:Name="Result1" HorizontalAlignment="Left" Margin="139,142,0,0" TextWrapping="Wrap" Text="Max Diff [dB]" VerticalAlignment="Top" Width="97"/>
-        <TextBox x:Name="Result2" HorizontalAlignment="Left" Margin="250,142,0,0" TextWrapping="Wrap" Text="Max Diff index" VerticalAlignment="Top" Width="96"/>
+        <TextBox x:Name="Result1" HorizontalAlignment="Left" Margin="150,142,0,0" TextWrapping="Wrap" Text="Max Diff [dB]" VerticalAlignment="Top" Width="97"/>
+        <TextBox x:Name="Result2" HorizontalAlignment="Left" Margin="270,142,0,0" TextWrapping="Wrap" Text="Max Diff index" VerticalAlignment="Top" Width="96"/>
         <Button Content="Execute" HorizontalAlignment="Left" Margin="33,141,0,0" VerticalAlignment="Top" Click="Button_Click_exe"/>
 
     </Grid>

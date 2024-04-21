@@ -32,6 +32,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestInputGeneratorSample", 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioDiffToolGUI", "AudioDiffToolGUI\AudioDiffToolGUI.csproj", "{368FA7C8-1C22-418A-AC52-1EC8FD6DAD9B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{61F70FB1-71A7-425B-832D-51660CBE85BF} = {61F70FB1-71A7-425B-832D-51660CBE85BF}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
