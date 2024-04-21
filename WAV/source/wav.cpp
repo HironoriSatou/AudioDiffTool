@@ -109,9 +109,7 @@ int wav_data_load(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<short[
 }
 
 int wav_data_load(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<int[]>[]>& data_buffer, unsigned int load_samples) {
-	int load_success_samples = 0;
-	
-	
+	int load_success_samples = 0;	
 	if (wav_handle->header.bits_per_samples == 24) {
 		std::unique_ptr<unsigned char[]> read_buffer(new unsigned char[load_samples * wav_handle->header.num_channels * SIZE_OF_INT_24_BIT_BYTE]);
 		int load_success_bytes = fread_s(read_buffer.get(), 
