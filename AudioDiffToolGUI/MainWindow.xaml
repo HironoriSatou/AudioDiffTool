@@ -1,0 +1,19 @@
+﻿<Window x:Class="AudioDiffToolGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AudioDiffToolGUI"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="300" Width="500">
+    <Grid>
+        <Button Content="Input File 1" HorizontalAlignment="Left" Margin="33,36,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+        <Button Content="Input File 2" HorizontalAlignment="Left" Margin="33,69,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+        <TextBox x:Name="TextBox1" HorizontalAlignment="Left" Margin="150,37,0,0" TextWrapping="Wrap" Text="Input File 1 Path" VerticalAlignment="Top" Width="320"/>
+        <TextBox x:Name="TextBox2" HorizontalAlignment="Left" Margin="150,70,0,0" TextWrapping="Wrap" Text="Input File 2 Path" VerticalAlignment="Top" Width="320"/>
+        <TextBox x:Name="Result1" HorizontalAlignment="Left" Margin="139,142,0,0" TextWrapping="Wrap" Text="Max Diff [dB]" VerticalAlignment="Top" Width="97"/>
+        <TextBox x:Name="Result2" HorizontalAlignment="Left" Margin="250,142,0,0" TextWrapping="Wrap" Text="Max Diff index" VerticalAlignment="Top" Width="96"/>
+        <Button Content="Execute" HorizontalAlignment="Left" Margin="33,141,0,0" VerticalAlignment="Top" Click="Button_Click_exe"/>
+
+    </Grid>
+</Window>
