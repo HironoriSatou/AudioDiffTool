@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CLIWrapper;
 
 namespace AudioDiffToolGUI
 {
@@ -26,6 +27,7 @@ namespace AudioDiffToolGUI
         }
         public string filename1 = "defalut.wav";
         public string filename2 = "defalut.wav";
+        public CLIWrapperClass cLIWrapperClass = new CLIWrapperClass();
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -61,8 +63,9 @@ namespace AudioDiffToolGUI
             // ADT main Process
             // TODO: call ADT process function (filename1, filename2)
             // Display result
-            Result1.Text = (32.0).ToString();
-            Result2.Text = (53).ToString();
+            cLIWrapperClass.CompareSound(filename1, filename2);
+            Result1.Text = cLIWrapperClass.num_ch.ToString();
+            Result2.Text = cLIWrapperClass.max_diff_dB.ToString();
         }
     }
 }

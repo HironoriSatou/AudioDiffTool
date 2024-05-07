@@ -32,14 +32,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestInputGeneratorSample", 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioDiffToolGUI", "AudioDiffToolGUI\AudioDiffToolGUI.csproj", "{368FA7C8-1C22-418A-AC52-1EC8FD6DAD9B}"
-	ProjectSection(ProjectDependencies) = postProject
-		{61F70FB1-71A7-425B-832D-51660CBE85BF} = {61F70FB1-71A7-425B-832D-51660CBE85BF}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CLIWrapper", "CLIWrapper\CLIWrapper.vcxproj", "{F82D0ABC-4A52-4888-A9A1-83595DFC233E}"
-	ProjectSection(ProjectDependencies) = postProject
-		{61F70FB1-71A7-425B-832D-51660CBE85BF} = {61F70FB1-71A7-425B-832D-51660CBE85BF}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -125,14 +119,14 @@ Global
 		{9103602C-01D0-4CED-91A6-CDB78E304ED8}.Release|x86.Build.0 = Release|Win32
 		{368FA7C8-1C22-418A-AC52-1EC8FD6DAD9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{368FA7C8-1C22-418A-AC52-1EC8FD6DAD9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{368FA7C8-1C22-418A-AC52-1EC8FD6DAD9B}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{368FA7C8-1C22-418A-AC52-1EC8FD6DAD9B}.Debug|x64.Build.0 = Debug|Any CPU
+		{368FA7C8-1C22-418A-AC52-1EC8FD6DAD9B}.Debug|x64.ActiveCfg = Debug|x64
+		{368FA7C8-1C22-418A-AC52-1EC8FD6DAD9B}.Debug|x64.Build.0 = Debug|x64
 		{368FA7C8-1C22-418A-AC52-1EC8FD6DAD9B}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{368FA7C8-1C22-418A-AC52-1EC8FD6DAD9B}.Debug|x86.Build.0 = Debug|Any CPU
 		{368FA7C8-1C22-418A-AC52-1EC8FD6DAD9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{368FA7C8-1C22-418A-AC52-1EC8FD6DAD9B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{368FA7C8-1C22-418A-AC52-1EC8FD6DAD9B}.Release|x64.ActiveCfg = Release|Any CPU
-		{368FA7C8-1C22-418A-AC52-1EC8FD6DAD9B}.Release|x64.Build.0 = Release|Any CPU
+		{368FA7C8-1C22-418A-AC52-1EC8FD6DAD9B}.Release|x64.ActiveCfg = Release|x64
+		{368FA7C8-1C22-418A-AC52-1EC8FD6DAD9B}.Release|x64.Build.0 = Release|x64
 		{368FA7C8-1C22-418A-AC52-1EC8FD6DAD9B}.Release|x86.ActiveCfg = Release|Any CPU
 		{368FA7C8-1C22-418A-AC52-1EC8FD6DAD9B}.Release|x86.Build.0 = Release|Any CPU
 		{F82D0ABC-4A52-4888-A9A1-83595DFC233E}.Debug|Any CPU.ActiveCfg = Debug|x64

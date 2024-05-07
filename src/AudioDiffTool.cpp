@@ -1,13 +1,17 @@
 #include "AudioDiffTool.h"
 
-AudioDiffToolResult::AudioDiffToolResult() {
+AudioDiffTool::AudioDiffTool() {
 	num_ch = 0;
 	memset(max_diff_dB, 0, ADT_MAX_CH_NUM * sizeof(float));
 	memset(max_diff_index, 0, ADT_MAX_CH_NUM * sizeof(int));
 }
 
+AudioDiffTool::~AudioDiffTool() {
+
+}
+
 using namespace std;
-int CompareSoundDispResult(AudioDiffToolResult* result, string input1, string input2) {
+int AudioDiffTool::CompareSoundDispResult(string input1, string input2) {
 	int rtn = 0;
 	int compare_length = 0;
 	std::unique_ptr<WAV_HANDLE> wav_handle_input1(new WAV_HANDLE);
@@ -113,18 +117,18 @@ int CompareSoundDispResult(AudioDiffToolResult* result, string input1, string in
 				max_diff_index[n_ch] = i_sample;
 			}
 		}
-		result->max_diff_dB[n_ch] = 20 * log10(max_diff_buffer[n_ch]);
-		result->max_diff_index[n_ch] = max_diff_index[n_ch];
+		max_diff_dB[n_ch] = 20 * log10(max_diff_buffer[n_ch]);
+		max_diff_index[n_ch] = max_diff_index[n_ch];
 		cout << "	max different value " << n_ch << "ch: " <<  20 * log10(max_diff_buffer[n_ch]) << " [dB] at " << max_diff_index[n_ch] << " sample" << endl;
 	}
 
 	wav_fclose(wav_handle_input1.get());
 	wav_fclose(wav_handle_input2.get());
-	result->num_ch = wav_handle_input1->header.num_channels;
+	num_ch = wav_handle_input1->header.num_channels;
 	return 0;
 }
 
-int StoreSoundData(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<float[]>[]>& input_buffer) {
+static int StoreSoundData(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<float[]>[]>& input_buffer) {
 		
 	// file read and type conversion
 	if (wav_handle->header.format == 0x01) { //PCM int data

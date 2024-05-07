@@ -20,24 +20,24 @@ namespace AudioDiffToolUnitTest
 				for (unsigned int n_bit = 16; n_bit <= 32; n_bit += 8) {
 					GenerateTestInputWavFile("test1.wav", length_sample, num_ch, n_bit, SampleRate, max_dbFS, "int", signal_type);
 					GenerateTestInputWavFile("test2.wav", length_sample, num_ch, n_bit, SampleRate, max_dbFS, "int", signal_type);
-					AudioDiffToolResult result;
-					int rtn = CompareSoundDispResult(&result, "test1.wav", "test2.wav");
+					AudioDiffTool audioDiffTool;
+					int rtn = audioDiffTool.CompareSoundDispResult("test1.wav", "test2.wav");
 					Assert::AreEqual(0, rtn);
-					Assert::AreEqual(num_ch, result.num_ch);
+					Assert::AreEqual(num_ch, audioDiffTool.num_ch);
 					for (auto i_ch = 0; i_ch < num_ch; i_ch++) {
-						Assert::IsTrue(isinf(result.max_diff_dB[i_ch]));
+						Assert::IsTrue(isinf(audioDiffTool.max_diff_dB[i_ch]));
 					}
 					remove("test1.wav");
 					remove("test2.wav");
 				}
 				GenerateTestInputWavFile("test1.wav", length_sample, num_ch, 32, SampleRate, max_dbFS, "float", signal_type);
 				GenerateTestInputWavFile("test2.wav", length_sample, num_ch, 32, SampleRate, max_dbFS, "float", signal_type);
-				AudioDiffToolResult result;
-				int rtn = CompareSoundDispResult(&result, "test1.wav", "test2.wav");
+				AudioDiffTool audioDiffTool;
+				int rtn = audioDiffTool.CompareSoundDispResult("test1.wav", "test2.wav");
 				Assert::AreEqual(0, rtn);
-				Assert::AreEqual(num_ch, result.num_ch);
+				Assert::AreEqual(num_ch, audioDiffTool.num_ch);
 				for (auto i_ch = 0; i_ch < num_ch; i_ch++) {
-					Assert::IsTrue(isinf(result.max_diff_dB[i_ch]));
+					Assert::IsTrue(isinf(audioDiffTool.max_diff_dB[i_ch]));
 				}
 				remove("test1.wav");
 				remove("test2.wav");
@@ -54,26 +54,26 @@ namespace AudioDiffToolUnitTest
 				for (unsigned int n_bit = 16; n_bit <= 32; n_bit += 8) {
 					GenerateTestInputWavFile("test1.wav", length_sample, num_ch, n_bit, SampleRate, max_dbFS1, "int", signal_type);
 					GenerateTestInputWavFile("test2.wav", length_sample, num_ch, n_bit, SampleRate, max_dbFS2, "int", signal_type);
-					AudioDiffToolResult result;
-					int rtn = CompareSoundDispResult(&result, "test1.wav", "test2.wav");
+					AudioDiffTool audioDiffTool;
+					int rtn = audioDiffTool.CompareSoundDispResult("test1.wav", "test2.wav");
 					Assert::AreEqual(0, rtn);
-					Assert::AreEqual(num_ch, result.num_ch);
+					Assert::AreEqual(num_ch, audioDiffTool.num_ch);
 					for (auto i_ch = 0; i_ch < num_ch; i_ch++) {
 						float exp_val = 20 * log10(abs(pow(10.0, max_dbFS1 / 20) - pow(10.0, max_dbFS2 / 20)));
-						Assert::IsTrue(abs(exp_val - result.max_diff_dB[i_ch]) <= 1e-3);
+						Assert::IsTrue(abs(exp_val - audioDiffTool.max_diff_dB[i_ch]) <= 1e-3);
 					}
 					remove("test1.wav");
 					remove("test2.wav");
 				}
 				GenerateTestInputWavFile("test1.wav", length_sample, num_ch, 32, SampleRate, max_dbFS1, "float", signal_type);
 				GenerateTestInputWavFile("test2.wav", length_sample, num_ch, 32, SampleRate, max_dbFS2, "float", signal_type);
-				AudioDiffToolResult result;
-				int rtn = CompareSoundDispResult(&result, "test1.wav", "test2.wav");
+				AudioDiffTool audioDiffTool;
+				int rtn = audioDiffTool.CompareSoundDispResult("test1.wav", "test2.wav");
 				Assert::AreEqual(0, rtn);
-				Assert::AreEqual(num_ch, result.num_ch);
+				Assert::AreEqual(num_ch, audioDiffTool.num_ch);
 				for (auto i_ch = 0; i_ch < num_ch; i_ch++) {
 					float exp_val = 20 * log10(abs(pow(10.0, max_dbFS1 / 20) - pow(10.0, max_dbFS2 / 20)));
-					Assert::IsTrue(abs(exp_val - result.max_diff_dB[i_ch]) <= 1e-3);
+					Assert::IsTrue(abs(exp_val - audioDiffTool.max_diff_dB[i_ch]) <= 1e-3);
 				}
 				remove("test1.wav");
 				remove("test2.wav");
@@ -82,10 +82,10 @@ namespace AudioDiffToolUnitTest
 
 		TEST_METHOD(NormalTest3)
 		{
-			AudioDiffToolResult result;
-			int rtn = CompareSoundDispResult(&result, "..\\..\\TestData\\matlab_float_32bit_wav.wav", "..\\..\\TestData\\matlab_float_32bit_wav2.wav");
+			AudioDiffTool audioDiffTool;
+			int rtn = audioDiffTool.CompareSoundDispResult("..\\..\\TestData\\matlab_float_32bit_wav.wav", "..\\..\\TestData\\matlab_float_32bit_wav2.wav");
 			Assert::AreEqual(0, rtn);
-			Assert::IsTrue(isinf(result.max_diff_dB[0]));
+			Assert::IsTrue(isinf(audioDiffTool.max_diff_dB[0]));
 		}
 
 		TEST_METHOD(AbnormalTest1)
@@ -100,16 +100,16 @@ namespace AudioDiffToolUnitTest
 			for (unsigned int n_bit = 16; n_bit <= 32; n_bit += 8) {
 				GenerateTestInputWavFile("test1.wav", length_sample, num_ch, n_bit, SampleRate1, max_dbFS1, "int", signal_type);
 				GenerateTestInputWavFile("test2.wav", length_sample, num_ch, n_bit, SampleRate2, max_dbFS2, "int", signal_type);
-				AudioDiffToolResult result;
-				int rtn = CompareSoundDispResult(&result, "test1.wav", "test2.wav");
+				AudioDiffTool audioDiffTool;
+				int rtn = audioDiffTool.CompareSoundDispResult("test1.wav", "test2.wav");
 				Assert::AreEqual(ADT_ERROR_FS, rtn);
 				remove("test1.wav");
 				remove("test2.wav");
 			}
 			GenerateTestInputWavFile("test1.wav", length_sample, num_ch, 32, SampleRate1, max_dbFS1, "float", signal_type);
 			GenerateTestInputWavFile("test2.wav", length_sample, num_ch, 32, SampleRate2, max_dbFS2, "float", signal_type);
-			AudioDiffToolResult result;
-			int rtn = CompareSoundDispResult(&result, "test1.wav", "test2.wav");
+			AudioDiffTool audioDiffTool;
+			int rtn = audioDiffTool.CompareSoundDispResult("test1.wav", "test2.wav");
 			Assert::AreEqual(ADT_ERROR_FS, rtn);
 			remove("test1.wav");
 			remove("test2.wav");
@@ -124,14 +124,14 @@ namespace AudioDiffToolUnitTest
 			unsigned int num_ch = 1;
 			for (unsigned int n_bit = 16; n_bit <= 32; n_bit += 8) {
 				GenerateTestInputWavFile("test1.wav", length_sample, num_ch, n_bit, SampleRate, max_dbFS1, "int", signal_type);
-				AudioDiffToolResult result;
-				int rtn = CompareSoundDispResult(&result, "test1.wav", "test_not_exist.wav");
+				AudioDiffTool audioDiffTool;
+				int rtn = audioDiffTool.CompareSoundDispResult("test1.wav", "test_not_exist.wav");
 				Assert::AreEqual(ADT_ERROR_FILE_OPEN, rtn);
 				remove("test1.wav");
 			}
 			GenerateTestInputWavFile("test1.wav", length_sample, num_ch, 32, SampleRate, max_dbFS1, "float", signal_type);
-			AudioDiffToolResult result;
-			int rtn = CompareSoundDispResult(&result, "test1.wav", "test_not_exist.wav");
+			AudioDiffTool audioDiffTool;
+			int rtn = audioDiffTool.CompareSoundDispResult("test1.wav", "test_not_exist.wav");
 			Assert::AreEqual(ADT_ERROR_FILE_OPEN, rtn);
 			remove("test1.wav");
 		}
@@ -147,16 +147,16 @@ namespace AudioDiffToolUnitTest
 			for (unsigned int n_bit = 16; n_bit <= 32; n_bit += 8) {
 				GenerateTestInputWavFile("test1.wav", length_sample, num_ch1, n_bit, SampleRate, max_dbFS1, "int", signal_type);
 				GenerateTestInputWavFile("test2.wav", length_sample, num_ch2, n_bit, SampleRate, max_dbFS2, "int", signal_type);
-				AudioDiffToolResult result;
-				int rtn = CompareSoundDispResult(&result, "test1.wav", "test2.wav");
+				AudioDiffTool audioDiffTool;
+				int rtn = audioDiffTool.CompareSoundDispResult("test1.wav", "test2.wav");
 				Assert::AreEqual(ADT_ERROR_NUM_CH, rtn);
 				remove("test1.wav");
 				remove("test2.wav");
 			}
 			GenerateTestInputWavFile("test1.wav", length_sample, num_ch1, 32, SampleRate, max_dbFS1, "float", signal_type);
 			GenerateTestInputWavFile("test2.wav", length_sample, num_ch2, 32, SampleRate, max_dbFS2, "float", signal_type);
-			AudioDiffToolResult result;
-			int rtn = CompareSoundDispResult(&result, "test1.wav", "test2.wav");
+			AudioDiffTool audioDiffTool;
+			int rtn = audioDiffTool.CompareSoundDispResult("test1.wav", "test2.wav");
 			Assert::AreEqual(ADT_ERROR_NUM_CH, rtn);
 			remove("test1.wav");
 			remove("test2.wav");
@@ -173,16 +173,16 @@ namespace AudioDiffToolUnitTest
 			for (unsigned int n_bit = 16; n_bit <= 32; n_bit += 8) {
 				GenerateTestInputWavFile("test1.wav", length_sample, num_ch1, n_bit, SampleRate, max_dbFS1, "int", signal_type);
 				GenerateTestInputWavFile("test2.wav", length_sample, num_ch2, n_bit, SampleRate, max_dbFS2, "int", signal_type);
-				AudioDiffToolResult result;
-				int rtn = CompareSoundDispResult(&result, "test1.wav", "test2.wav");				
+				AudioDiffTool audioDiffTool;
+				int rtn = audioDiffTool.CompareSoundDispResult("test1.wav", "test2.wav");				
 				Assert::AreEqual(ADT_ERROR_NUM_CH, rtn);
 				remove("test1.wav");
 				remove("test2.wav");
 			}
 			GenerateTestInputWavFile("test1.wav", length_sample, num_ch1, 32, SampleRate, max_dbFS1, "float", signal_type);
 			GenerateTestInputWavFile("test2.wav", length_sample, num_ch2, 32, SampleRate, max_dbFS2, "float", signal_type);
-			AudioDiffToolResult result;
-			int rtn = CompareSoundDispResult(&result, "test1.wav", "test2.wav");
+			AudioDiffTool audioDiffTool;
+			int rtn = audioDiffTool.CompareSoundDispResult("test1.wav", "test2.wav");
 			Assert::AreEqual(ADT_ERROR_NUM_CH, rtn);
 			remove("test1.wav");
 			remove("test2.wav");
