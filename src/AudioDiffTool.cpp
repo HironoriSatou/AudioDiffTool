@@ -1,9 +1,15 @@
 #include "AudioDiffTool.h"
 
 AudioDiffTool::AudioDiffTool() {
-	num_ch = 0;
-	memset(max_diff_dB, 0, ADT_MAX_CH_NUM * sizeof(float));
-	memset(max_diff_index, 0, ADT_MAX_CH_NUM * sizeof(int));
+	memset(num_ch, 0, ADT_INPUT_FILES * sizeof(unsigned int));
+	memset(num_samples, 0, ADT_INPUT_FILES * sizeof(unsigned int));
+	memset(fs, 0, ADT_INPUT_FILES * sizeof(unsigned int));
+	memset(bit, 0, ADT_INPUT_FILES * sizeof(unsigned int));
+	memset(max_diff_dB_ch_array, 0, ADT_MAX_CH_NUM * sizeof(float));
+	memset(max_diff_index_ch_array, 0, ADT_MAX_CH_NUM * sizeof(int));
+	max_diff_dB = -INFINITY;
+	max_diff_index = 0;
+	max_diff_ch = 0;
 }
 
 AudioDiffTool::~AudioDiffTool() {
@@ -84,13 +90,13 @@ int AudioDiffTool::CompareSoundDispResult(string input1, string input2) {
 	std::unique_ptr<std::unique_ptr<float []>[]> input_buffer2(new std::unique_ptr<float []>[wav_handle_input2->header.num_channels]);
 	std::unique_ptr<std::unique_ptr<float []>[]> diff_buffer(new std::unique_ptr<float []>[wav_handle_input1->header.num_channels]);
 	std::unique_ptr<float []> max_diff_buffer(new float[wav_handle_input1->header.num_channels]);
-	std::unique_ptr<unsigned int []> max_diff_index(new unsigned int[wav_handle_input1->header.num_channels]);
+	std::unique_ptr<unsigned int []> max_diff_index_buffer(new unsigned int[wav_handle_input1->header.num_channels]);
 	for (auto n_ch = 0; n_ch < wav_handle_input1->header.num_channels; n_ch++) {
 		input_buffer1[n_ch] = std::make_unique<float []>(wav_handle_input1->num_samples);
 		input_buffer2[n_ch] = std::make_unique<float []>(wav_handle_input2->num_samples);
 		diff_buffer[n_ch] = std::make_unique<float []>(wav_handle_input1->num_samples);
 		max_diff_buffer[n_ch] = 0.0f;
-		max_diff_index[n_ch] = 0;
+		max_diff_index_buffer[n_ch] = 0;
 	}
 
 	// compare audio data
@@ -114,17 +120,29 @@ int AudioDiffTool::CompareSoundDispResult(string input1, string input2) {
 			diff_buffer[n_ch][i_sample] = diff_value;
 			if (diff_value > max_diff_buffer[n_ch]) {
 				max_diff_buffer[n_ch] = diff_value;
-				max_diff_index[n_ch] = i_sample;
+				max_diff_index_buffer[n_ch] = i_sample;
 			}
 		}
-		max_diff_dB[n_ch] = 20 * log10(max_diff_buffer[n_ch]);
-		max_diff_index[n_ch] = max_diff_index[n_ch];
-		cout << "	max different value " << n_ch << "ch: " <<  20 * log10(max_diff_buffer[n_ch]) << " [dB] at " << max_diff_index[n_ch] << " sample" << endl;
+		max_diff_dB_ch_array[n_ch] = 20 * log10(max_diff_buffer[n_ch]);
+		max_diff_index_ch_array[n_ch] = max_diff_index_buffer[n_ch];
+		if (max_diff_dB_ch_array[n_ch] > max_diff_dB) {
+			max_diff_dB = max_diff_dB_ch_array[n_ch];
+			max_diff_index = max_diff_index_ch_array[n_ch];
+			max_diff_ch = n_ch;
+		}
+		cout << "	max different value " << n_ch << "ch: " <<  20 * log10(max_diff_buffer[n_ch]) << " [dB] at " << max_diff_index_buffer[n_ch] << " sample" << endl;
 	}
 
 	wav_fclose(wav_handle_input1.get());
 	wav_fclose(wav_handle_input2.get());
-	num_ch = wav_handle_input1->header.num_channels;
+	num_ch[0] = wav_handle_input1->header.num_channels;
+	num_ch[1] = wav_handle_input2->header.num_channels;
+	num_samples[0] = wav_handle_input1->num_samples;
+	num_samples[1] = wav_handle_input2->num_samples;
+	fs[0] = wav_handle_input1->header.fs;
+	fs[1] = wav_handle_input2->header.fs;
+	bit[0] = wav_handle_input1->header.bits_per_samples;
+	bit[1] = wav_handle_input2->header.bits_per_samples;
 	return 0;
 }
 

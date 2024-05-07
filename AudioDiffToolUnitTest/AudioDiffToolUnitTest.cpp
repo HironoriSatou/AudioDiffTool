@@ -23,9 +23,9 @@ namespace AudioDiffToolUnitTest
 					AudioDiffTool audioDiffTool;
 					int rtn = audioDiffTool.CompareSoundDispResult("test1.wav", "test2.wav");
 					Assert::AreEqual(0, rtn);
-					Assert::AreEqual(num_ch, audioDiffTool.num_ch);
+					Assert::AreEqual(num_ch, audioDiffTool.num_ch[0]);
 					for (auto i_ch = 0; i_ch < num_ch; i_ch++) {
-						Assert::IsTrue(isinf(audioDiffTool.max_diff_dB[i_ch]));
+						Assert::IsTrue(isinf(audioDiffTool.max_diff_dB_ch_array[i_ch]));
 					}
 					remove("test1.wav");
 					remove("test2.wav");
@@ -35,9 +35,9 @@ namespace AudioDiffToolUnitTest
 				AudioDiffTool audioDiffTool;
 				int rtn = audioDiffTool.CompareSoundDispResult("test1.wav", "test2.wav");
 				Assert::AreEqual(0, rtn);
-				Assert::AreEqual(num_ch, audioDiffTool.num_ch);
+				Assert::AreEqual(num_ch, audioDiffTool.num_ch[0]);
 				for (auto i_ch = 0; i_ch < num_ch; i_ch++) {
-					Assert::IsTrue(isinf(audioDiffTool.max_diff_dB[i_ch]));
+					Assert::IsTrue(isinf(audioDiffTool.max_diff_dB_ch_array[i_ch]));
 				}
 				remove("test1.wav");
 				remove("test2.wav");
@@ -57,10 +57,10 @@ namespace AudioDiffToolUnitTest
 					AudioDiffTool audioDiffTool;
 					int rtn = audioDiffTool.CompareSoundDispResult("test1.wav", "test2.wav");
 					Assert::AreEqual(0, rtn);
-					Assert::AreEqual(num_ch, audioDiffTool.num_ch);
+					Assert::AreEqual(num_ch, audioDiffTool.num_ch[0]);
 					for (auto i_ch = 0; i_ch < num_ch; i_ch++) {
 						float exp_val = 20 * log10(abs(pow(10.0, max_dbFS1 / 20) - pow(10.0, max_dbFS2 / 20)));
-						Assert::IsTrue(abs(exp_val - audioDiffTool.max_diff_dB[i_ch]) <= 1e-3);
+						Assert::IsTrue(abs(exp_val - audioDiffTool.max_diff_dB_ch_array[i_ch]) <= 1e-3);
 					}
 					remove("test1.wav");
 					remove("test2.wav");
@@ -70,10 +70,10 @@ namespace AudioDiffToolUnitTest
 				AudioDiffTool audioDiffTool;
 				int rtn = audioDiffTool.CompareSoundDispResult("test1.wav", "test2.wav");
 				Assert::AreEqual(0, rtn);
-				Assert::AreEqual(num_ch, audioDiffTool.num_ch);
+				Assert::AreEqual(num_ch, audioDiffTool.num_ch[0]);
 				for (auto i_ch = 0; i_ch < num_ch; i_ch++) {
 					float exp_val = 20 * log10(abs(pow(10.0, max_dbFS1 / 20) - pow(10.0, max_dbFS2 / 20)));
-					Assert::IsTrue(abs(exp_val - audioDiffTool.max_diff_dB[i_ch]) <= 1e-3);
+					Assert::IsTrue(abs(exp_val - audioDiffTool.max_diff_dB_ch_array[i_ch]) <= 1e-3);
 				}
 				remove("test1.wav");
 				remove("test2.wav");
@@ -85,7 +85,7 @@ namespace AudioDiffToolUnitTest
 			AudioDiffTool audioDiffTool;
 			int rtn = audioDiffTool.CompareSoundDispResult("..\\..\\TestData\\matlab_float_32bit_wav.wav", "..\\..\\TestData\\matlab_float_32bit_wav2.wav");
 			Assert::AreEqual(0, rtn);
-			Assert::IsTrue(isinf(audioDiffTool.max_diff_dB[0]));
+			Assert::IsTrue(isinf(audioDiffTool.max_diff_dB_ch_array[0]));
 		}
 
 		TEST_METHOD(AbnormalTest1)

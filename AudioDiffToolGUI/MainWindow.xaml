@@ -5,15 +5,35 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AudioDiffToolGUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="300" Width="500">
+        Title="MainWindow" Height="350" Width="600">
     <Grid>
         <Button Content="Input File 1" HorizontalAlignment="Left" Margin="33,36,0,0" VerticalAlignment="Top" Click="Button_Click"/>
         <Button Content="Input File 2" HorizontalAlignment="Left" Margin="33,69,0,0" VerticalAlignment="Top" Click="Button_Click"/>
-        <TextBox x:Name="TextBox1" HorizontalAlignment="Left" Margin="150,37,0,0" TextWrapping="Wrap" Text="Input File 1 Path" VerticalAlignment="Top" Width="320"/>
-        <TextBox x:Name="TextBox2" HorizontalAlignment="Left" Margin="150,70,0,0" TextWrapping="Wrap" Text="Input File 2 Path" VerticalAlignment="Top" Width="320"/>
-        <TextBox x:Name="Result1" HorizontalAlignment="Left" Margin="150,142,0,0" TextWrapping="Wrap" Text="Max Diff [dB]" VerticalAlignment="Top" Width="97"/>
-        <TextBox x:Name="Result2" HorizontalAlignment="Left" Margin="270,142,0,0" TextWrapping="Wrap" Text="Max Diff index" VerticalAlignment="Top" Width="96"/>
-        <Button Content="Execute" HorizontalAlignment="Left" Margin="33,141,0,0" VerticalAlignment="Top" Click="Button_Click_exe"/>
+        <TextBox x:Name="Input_File1_Path" HorizontalAlignment="Left" Margin="121,36,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="443"/>
+        <TextBox x:Name="Input_File2_Path" HorizontalAlignment="Left" Margin="121,69,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="443"/>
+        <TextBox x:Name="Input_File1_num_ch" Margin="204,154,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" HorizontalAlignment="Left" Width="50"/>
+        <TextBox x:Name="Result_max_index" HorizontalAlignment="Left" Margin="135,273,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="48"/>
+        <Button Content="Execute" HorizontalAlignment="Left" Margin="33,114,0,0" VerticalAlignment="Top" Click="Button_Click_exe" Width="63"/>
+        <TextBlock HorizontalAlignment="Left" Margin="121,115,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18"><Run Language="ja-jp" Text="Input "/><Run Text="File Info"/><LineBreak/><Run/></TextBlock>
+        <TextBlock Margin="202,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" TextAlignment="Center" HorizontalAlignment="Left" Width="55"><Run Text="ch"/><Run Language="ja-jp" Text="annels"/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="275,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" TextAlignment="Center" Width="50"><Run Language="ja-jp" Text="samples"/></TextBlock>
+        <TextBox x:Name="Input_File1_num_samples" HorizontalAlignment="Left" Margin="273,154,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="54"/>
+        <TextBlock HorizontalAlignment="Left" Margin="121,225,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18"><Run Language="ja-jp" Text="Result"/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="121,248,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18"><Run Language="ja-jp" Text="Max diff index"/></TextBlock>
+        <TextBox x:Name="Result_max_ch" Margin="223,273,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" HorizontalAlignment="Left" Width="48"/>
+        <TextBlock HorizontalAlignment="Left" Margin="217,248,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18"><Run Text="Max diff"/><Run Language="ja-jp" Text=" ch"/></TextBlock>
+        <TextBox x:Name="Result_max_diff" HorizontalAlignment="Left" Margin="308,273,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="48"/>
+        <TextBlock HorizontalAlignment="Left" Margin="294,248,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" RenderTransformOrigin="0.358,0.534" Width="76"><Run Text="Max diff"/><Run Text=" [dB]"/><Run Text="[dB]"/></TextBlock>
+        <TextBox x:Name="Input_File2_num_ch" Margin="204,179,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" HorizontalAlignment="Left" Width="50"/>
+        <TextBox x:Name="Input_File2_num_samples" HorizontalAlignment="Left" Margin="273,179,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="54"/>
+        <TextBlock HorizontalAlignment="Left" Margin="121,155,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Language="ja-jp" Text="Input File 1"/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="121,180,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Language="ja-jp" Text="Input File 2"/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="349,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" TextAlignment="Center" Width="50"><Run Language="ja-jp" Text="fs"/></TextBlock>
+        <TextBox x:Name="Input_File1_fs" HorizontalAlignment="Left" Margin="347,154,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="54"/>
+        <TextBox x:Name="Input_File2_fs" HorizontalAlignment="Left" Margin="347,179,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="54"/>
+        <TextBlock HorizontalAlignment="Left" Margin="421,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" TextAlignment="Center" Width="50" Text="bit"/>
+        <TextBox x:Name="Input_File1_bit" HorizontalAlignment="Left" Margin="419,154,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="54"/>
+        <TextBox x:Name="Input_File2_bit" HorizontalAlignment="Left" Margin="419,179,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="54"/>
 
     </Grid>
 </Window>

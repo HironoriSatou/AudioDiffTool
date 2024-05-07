@@ -5,7 +5,6 @@
 #include <bitset>
 #include "wav.h"
 
-#define DllExport __declspec( dllexport )
 #ifdef _DEBUG
 	#define _CRTDBG_MAP_ALLOC
 	#include <stdlib.h>
@@ -13,33 +12,26 @@
 #endif // _DEBUG
 
 #define ADT_MAX_CH_NUM 128
+#define ADT_INPUT_FILES 2
 #define ADT_ERROR_FILE_OPEN	(-1)
 #define ADT_ERROR_FS		(-2)
 #define ADT_ERROR_NUM_CH	(-3)
 #define ADT_ERROR_RUNTIME	(-4)
-
-//extern "C"
-//{
-//	struct DllExport AudioDiffTool
-//	{
-//	public:
-//		AudioDiffTool();
-//		~AudioDiffTool();
-//		unsigned int num_ch;
-//		float max_diff_dB[ADT_MAX_CH_NUM];
-//		int max_diff_index[ADT_MAX_CH_NUM];
-//		int CompareSoundDispResult(std::string input1, std::string input2);		
-//	};
-//}
 
 struct AudioDiffTool
 {
 public:
 	AudioDiffTool();
 	~AudioDiffTool();
-	unsigned int num_ch;
-	float max_diff_dB[ADT_MAX_CH_NUM];
-	int max_diff_index[ADT_MAX_CH_NUM];
+	unsigned int num_ch[ADT_INPUT_FILES];
+	unsigned int num_samples[ADT_INPUT_FILES];
+	unsigned int fs[ADT_INPUT_FILES];
+	unsigned int bit[ADT_INPUT_FILES];
+	float max_diff_dB_ch_array[ADT_MAX_CH_NUM];
+	int max_diff_index_ch_array[ADT_MAX_CH_NUM];
+	float max_diff_dB;
+	int max_diff_ch;
+	int max_diff_index;
 	int CompareSoundDispResult(std::string input1, std::string input2);
 };
 static int StoreSoundData(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<float[]>[]>& input_buffer);
