@@ -9,8 +9,8 @@
     <Grid>
         <Button Content="Input File 1" HorizontalAlignment="Left" Margin="33,36,0,0" VerticalAlignment="Top" Click="Button_Click"/>
         <Button Content="Input File 2" HorizontalAlignment="Left" Margin="33,69,0,0" VerticalAlignment="Top" Click="Button_Click"/>
-        <TextBox x:Name="Input_File1_Path" HorizontalAlignment="Left" Margin="121,36,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="443"/>
-        <TextBox x:Name="Input_File2_Path" HorizontalAlignment="Left" Margin="121,69,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="443"/>
+        <TextBox x:Name="Input_File1_Path" HorizontalAlignment="Left" Margin="121,36,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="443" AllowDrop="True" PreviewDragOver="TextBox_PreviewDragOver" Drop="TextBox_Drop"/>
+        <TextBox x:Name="Input_File2_Path" HorizontalAlignment="Left" Margin="121,69,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="443" AllowDrop="True" PreviewDragOver="TextBox_PreviewDragOver" Drop="TextBox_Drop"/>
         <TextBox x:Name="Input_File1_num_ch" Margin="204,154,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" HorizontalAlignment="Left" Width="50"/>
         <TextBox x:Name="Result_max_index" HorizontalAlignment="Left" Margin="135,273,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="48"/>
         <Button Content="Execute" HorizontalAlignment="Left" Margin="33,114,0,0" VerticalAlignment="Top" Click="Button_Click_exe" Width="63"/>

@@ -80,5 +80,37 @@ namespace AudioDiffToolGUI
             Result_max_ch.Text = cLIWrapperClass.max_diff_ch.ToString();
             Result_max_diff.Text = cLIWrapperClass.max_diff_dB.ToString();
         }
+
+        private void TextBox_PreviewDragOver(object sender, DragEventArgs e)
+        {
+            // マウスカーソルをコピー中に変更
+            e.Effects = DragDropEffects.Copy;
+            // ドラッグ中のオブジェクトがファイルの場合、受け付ける
+            e.Handled = e.Data.GetDataPresent(DataFormats.FileDrop);
+        }
+
+        private void TextBox_Drop(object sender, DragEventArgs e)
+        {
+            TextBox txt = (TextBox)sender;
+            // ドロップしたファイル一覧を取得
+            var files = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (files == null)
+            {
+                return;
+            }
+
+            var sb = new StringBuilder();
+            sb.Append(files[0]);
+            if (txt.Name == "Input_File1_Path")
+            {
+                filename1 = sb.ToString();
+                Input_File1_Path.Text = sb.ToString();
+            }
+            else 
+            {
+                filename2 = sb.ToString();
+                Input_File2_Path.Text = sb.ToString();
+            }
+        }
     }
 }
