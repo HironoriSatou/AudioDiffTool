@@ -112,5 +112,10 @@ namespace AudioDiffToolGUI
                 Input_File2_Path.Text = sb.ToString();
             }
         }
+
+        private void Button_version(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("version");
+        }
     }
 }

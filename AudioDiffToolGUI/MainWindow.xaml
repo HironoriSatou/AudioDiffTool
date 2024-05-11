@@ -5,15 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AudioDiffToolGUI"
         mc:Ignorable="d"
-        Title="AudioDiffTool" Height="350" Width="600">
+        Title="AudioDiffTool" Height="350" Width="600" ResizeMode="NoResize">
     <Grid>
-        <Button Content="Input File 1" HorizontalAlignment="Left" Margin="33,36,0,0" VerticalAlignment="Top" Click="Button_Click"/>
-        <Button Content="Input File 2" HorizontalAlignment="Left" Margin="33,69,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+        <Button Content="Input File 1" HorizontalAlignment="Left" Margin="23,36,0,0" VerticalAlignment="Top" Click="Button_Click" Width="73"/>
+        <Button Content="Input File 2" HorizontalAlignment="Left" Margin="23,69,0,0" VerticalAlignment="Top" Click="Button_Click" Width="73"/>
         <TextBox x:Name="Input_File1_Path" HorizontalAlignment="Left" Margin="121,36,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="443" AllowDrop="True" PreviewDragOver="TextBox_PreviewDragOver" Drop="TextBox_Drop"/>
         <TextBox x:Name="Input_File2_Path" HorizontalAlignment="Left" Margin="121,69,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="443" AllowDrop="True" PreviewDragOver="TextBox_PreviewDragOver" Drop="TextBox_Drop"/>
         <TextBox x:Name="Input_File1_num_ch" Margin="204,154,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" HorizontalAlignment="Left" Width="50"/>
         <TextBox x:Name="Result_max_index" HorizontalAlignment="Left" Margin="135,273,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="48"/>
-        <Button Content="Execute" HorizontalAlignment="Left" Margin="33,114,0,0" VerticalAlignment="Top" Click="Button_Click_exe" Width="63"/>
+        <Button Content="Execute" HorizontalAlignment="Left" Margin="23,114,0,0" VerticalAlignment="Top" Click="Button_Click_exe" Width="73"/>
         <TextBlock HorizontalAlignment="Left" Margin="121,115,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18"><Run Language="ja-jp" Text="Input "/><Run Text="File Info"/><LineBreak/><Run/></TextBlock>
         <TextBlock Margin="202,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" TextAlignment="Center" HorizontalAlignment="Left" Width="55"><Run Text="ch"/><Run Language="ja-jp" Text="annels"/></TextBlock>
         <TextBlock HorizontalAlignment="Left" Margin="275,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" TextAlignment="Center" Width="50"><Run Language="ja-jp" Text="samples"/></TextBlock>
@@ -34,6 +34,11 @@
         <TextBlock HorizontalAlignment="Left" Margin="421,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" TextAlignment="Center" Width="50" Text="bit"/>
         <TextBox x:Name="Input_File1_bit" HorizontalAlignment="Left" Margin="419,154,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="54"/>
         <TextBox x:Name="Input_File2_bit" HorizontalAlignment="Left" Margin="419,179,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="54"/>
+        <DockPanel LastChildFill="False" HorizontalAlignment="Left" Width="324" Height="23" VerticalAlignment="Top">
+            <Menu Width="100">
+                <Button Content="version" Click="Button_version" Width="63" HorizontalAlignment="Center" Height="20"/>
+            </Menu>
+        </DockPanel>
 
     </Grid>
 </Window>
