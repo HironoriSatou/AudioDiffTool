@@ -33,6 +33,7 @@ public:
 	int max_diff_ch;
 	int max_diff_index;
 	int CompareSoundDispResult(std::string input1, std::string input2);
+	int ClearADTinstance();
 };
 static int StoreSoundData(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<float[]>[]>& input_buffer);
 static int TestReadWavFile(char* input_filename);

@@ -146,6 +146,18 @@ int AudioDiffTool::CompareSoundDispResult(string input1, string input2) {
 	return 0;
 }
 
+int AudioDiffTool::ClearADTinstance() {
+	memset(num_ch, 0, ADT_INPUT_FILES * sizeof(unsigned int));
+	memset(num_samples, 0, ADT_INPUT_FILES * sizeof(unsigned int));
+	memset(fs, 0, ADT_INPUT_FILES * sizeof(unsigned int));
+	memset(bit, 0, ADT_INPUT_FILES * sizeof(unsigned int));
+	memset(max_diff_dB_ch_array, 0, ADT_MAX_CH_NUM * sizeof(float));
+	memset(max_diff_index_ch_array, 0, ADT_MAX_CH_NUM * sizeof(int));
+	max_diff_dB = -INFINITY;
+	max_diff_index = 0;
+	max_diff_ch = 0;
+	return 0;
+}
 static int StoreSoundData(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<float[]>[]>& input_buffer) {
 		
 	// file read and type conversion

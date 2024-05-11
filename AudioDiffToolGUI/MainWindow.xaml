@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AudioDiffToolGUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="600">
+        Title="AudioDiffTool" Height="350" Width="600">
     <Grid>
         <Button Content="Input File 1" HorizontalAlignment="Left" Margin="33,36,0,0" VerticalAlignment="Top" Click="Button_Click"/>
         <Button Content="Input File 2" HorizontalAlignment="Left" Margin="33,69,0,0" VerticalAlignment="Top" Click="Button_Click"/>
