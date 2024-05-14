@@ -34,11 +34,6 @@
         <TextBlock HorizontalAlignment="Left" Margin="421,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" TextAlignment="Center" Width="50" Text="bit"/>
         <TextBox x:Name="Input_File1_bit" HorizontalAlignment="Left" Margin="419,154,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="54"/>
         <TextBox x:Name="Input_File2_bit" HorizontalAlignment="Left" Margin="419,179,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="54"/>
-        <DockPanel LastChildFill="False" HorizontalAlignment="Left" Width="324" Height="23" VerticalAlignment="Top">
-            <Menu Width="100">
-                <Button Content="version" Click="Button_version" Width="63" HorizontalAlignment="Center" Height="20"/>
-            </Menu>
-        </DockPanel>
 
     </Grid>
 </Window>
