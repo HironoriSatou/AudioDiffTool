@@ -1,4 +1,5 @@
 #include "AudioDiffTool.h"
+using namespace std;
 
 AudioDiffTool::AudioDiffTool() {
 	memset(num_ch, 0, ADT_INPUT_FILES * sizeof(unsigned int));
@@ -10,16 +11,15 @@ AudioDiffTool::AudioDiffTool() {
 	max_diff_dB = -INFINITY;
 	max_diff_index = 0;
 	max_diff_ch = 0;
+	compare_samples = 0;
 }
 
 AudioDiffTool::~AudioDiffTool() {
 
 }
 
-using namespace std;
 int AudioDiffTool::CompareSoundDispResult(string input1, string input2) {
 	int rtn = 0;
-	int compare_length = 0;
 	std::unique_ptr<WAV_HANDLE> wav_handle_input1(new WAV_HANDLE);
 	std::unique_ptr<WAV_HANDLE> wav_handle_input2(new WAV_HANDLE);
 
@@ -75,39 +75,44 @@ int AudioDiffTool::CompareSoundDispResult(string input1, string input2) {
 	if (wav_handle_input1->num_samples != wav_handle_input2->num_samples) {
 		cout << "Warning, number of samples not matched, compare by shorter length" << endl;
 		if (wav_handle_input1->num_samples > wav_handle_input2->num_samples) {
-			compare_length = wav_handle_input2->num_samples;
+			compare_samples = wav_handle_input2->num_samples;
 		}
 		else {
-			compare_length = wav_handle_input1->num_samples;
+			compare_samples = wav_handle_input1->num_samples;
 		}
 	}
 	else {
-		compare_length = wav_handle_input1->num_samples;
+		compare_samples = wav_handle_input1->num_samples;
 	}
 
 	// allocate buffer
-	std::unique_ptr<std::unique_ptr<float []>[]> input_buffer1(new std::unique_ptr<float []>[wav_handle_input1->header.num_channels]);
-	std::unique_ptr<std::unique_ptr<float []>[]> input_buffer2(new std::unique_ptr<float []>[wav_handle_input2->header.num_channels]);
-	std::unique_ptr<std::unique_ptr<float []>[]> diff_buffer(new std::unique_ptr<float []>[wav_handle_input1->header.num_channels]);
+	audio_buffer = std::make_unique<std::unique_ptr<std::unique_ptr<float[]>[]>[]>(ADT_INPUT_FILES);
+	diff_buffer = std::make_unique<std::unique_ptr<float[]>[]>(wav_handle_input1->header.num_channels);
 	std::unique_ptr<float []> max_diff_buffer(new float[wav_handle_input1->header.num_channels]);
 	std::unique_ptr<unsigned int []> max_diff_index_buffer(new unsigned int[wav_handle_input1->header.num_channels]);
+
+	for (auto n_files = 0; n_files < ADT_INPUT_FILES; n_files++) {
+		audio_buffer[n_files] = std::make_unique<std::unique_ptr<float[]>[]>(wav_handle_input1->header.num_channels);
+		for (auto n_ch = 0; n_ch < wav_handle_input1->header.num_channels; n_ch++) {
+			audio_buffer[n_files][n_ch] = std::make_unique<float[]>(compare_samples);
+		}
+	}
+
 	for (auto n_ch = 0; n_ch < wav_handle_input1->header.num_channels; n_ch++) {
-		input_buffer1[n_ch] = std::make_unique<float []>(wav_handle_input1->num_samples);
-		input_buffer2[n_ch] = std::make_unique<float []>(wav_handle_input2->num_samples);
-		diff_buffer[n_ch] = std::make_unique<float []>(wav_handle_input1->num_samples);
+		diff_buffer[n_ch] = std::make_unique<float[]>(compare_samples);
 		max_diff_buffer[n_ch] = 0.0f;
 		max_diff_index_buffer[n_ch] = 0;
 	}
 
 	// compare audio data
-	rtn = StoreSoundData(wav_handle_input1.get(), input_buffer1);
+	rtn = StoreSoundData(wav_handle_input1.get(), audio_buffer[0]);
 	if (rtn != 0) {
 		cout << "store audio data failed" << endl;
 		wav_fclose(wav_handle_input1.get());
 		wav_fclose(wav_handle_input2.get());
 		return ADT_ERROR_RUNTIME;
 	}
-	rtn = StoreSoundData(wav_handle_input2.get(), input_buffer2);
+	rtn = StoreSoundData(wav_handle_input2.get(), audio_buffer[1]);
 	if (rtn != 0) {
 		cout << "store audio data failed" << endl;
 		wav_fclose(wav_handle_input1.get());
@@ -115,8 +120,8 @@ int AudioDiffTool::CompareSoundDispResult(string input1, string input2) {
 		return ADT_ERROR_RUNTIME;
 	}
 	for (auto n_ch = 0; n_ch < wav_handle_input1->header.num_channels; n_ch++) {
-		for (auto i_sample = 0; i_sample < compare_length; i_sample++) {
-			float diff_value = abs(input_buffer1[n_ch][i_sample] - input_buffer2[n_ch][i_sample]);
+		for (auto i_sample = 0; i_sample < compare_samples; i_sample++) {
+			float diff_value = abs(audio_buffer[0][n_ch][i_sample] - audio_buffer[1][n_ch][i_sample]);
 			diff_buffer[n_ch][i_sample] = diff_value;
 			if (diff_value > max_diff_buffer[n_ch]) {
 				max_diff_buffer[n_ch] = diff_value;

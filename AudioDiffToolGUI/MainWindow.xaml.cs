@@ -21,13 +21,14 @@ namespace AudioDiffToolGUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
+
         public string filename1 = "defalut.wav";
         public string filename2 = "defalut.wav";
         public CLIWrapperClass cLIWrapperClass = new CLIWrapperClass();
+        public MainWindow()
+        {
+            InitializeComponent();            
+        }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -79,6 +80,13 @@ namespace AudioDiffToolGUI
             Result_max_index.Text = cLIWrapperClass.max_diff_index.ToString();
             Result_max_ch.Text = cLIWrapperClass.max_diff_ch.ToString();
             Result_max_diff.Text = cLIWrapperClass.max_diff_dB.ToString();
+        }
+
+        private void Button_Click_Chart(object sender, RoutedEventArgs e)
+        {
+            ChartWindow chartWindow = new ChartWindow();
+            var temp = cLIWrapperClass.GetAudioBuffer();
+            chartWindow.Show();
         }
 
         private void TextBox_PreviewDragOver(object sender, DragEventArgs e)

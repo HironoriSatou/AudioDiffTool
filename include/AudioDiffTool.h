@@ -25,6 +25,7 @@ public:
 	~AudioDiffTool();
 	unsigned int num_ch[ADT_INPUT_FILES];
 	unsigned int num_samples[ADT_INPUT_FILES];
+	unsigned int compare_samples;
 	unsigned int fs[ADT_INPUT_FILES];
 	unsigned int bit[ADT_INPUT_FILES];
 	float max_diff_dB_ch_array[ADT_MAX_CH_NUM];
@@ -34,7 +35,10 @@ public:
 	int max_diff_index;
 	int CompareSoundDispResult(std::string input1, std::string input2);
 	int ClearADTinstance();
+	std::unique_ptr<std::unique_ptr<std::unique_ptr<float[]>[]>[]> audio_buffer;
+	std::unique_ptr<std::unique_ptr<float[]>[]> diff_buffer;
 };
+
 static int StoreSoundData(WAV_HANDLE* wav_handle, std::unique_ptr<std::unique_ptr<float[]>[]>& input_buffer);
 static int TestReadWavFile(char* input_filename);
 static int TestWriteWavFile(char* input_filename);

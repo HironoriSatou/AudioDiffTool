@@ -34,6 +34,7 @@
         <TextBlock HorizontalAlignment="Left" Margin="421,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" TextAlignment="Center" Width="50" Text="bit"/>
         <TextBox x:Name="Input_File1_bit" HorizontalAlignment="Left" Margin="419,154,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="54"/>
         <TextBox x:Name="Input_File2_bit" HorizontalAlignment="Left" Margin="419,179,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="54"/>
+        <Button Content="Chart" HorizontalAlignment="Left" Margin="23,148,0,0" VerticalAlignment="Top" Click="Button_Click_Chart" Width="73"/>
 
     </Grid>
 </Window>
