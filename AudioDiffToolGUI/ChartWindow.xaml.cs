@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Forms.DataVisualization.Charting;
+using CLIWrapper;
+using System.Collections;
 
 namespace AudioDiffToolGUI
 {
@@ -21,8 +23,11 @@ namespace AudioDiffToolGUI
     /// </summary>
     public partial class ChartWindow : Window
     {
-        public ChartWindow()
+
+        public CLIWrapperClass _cLIWrapperClass;
+        public ChartWindow(CLIWrapperClass cLIWrapperClass)
         {
+            _cLIWrapperClass = cLIWrapperClass;
             InitializeComponent();
         }
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -32,24 +37,35 @@ namespace AudioDiffToolGUI
 
             // ChartArea追加
             graph.ChartAreas.Add("Graph1");
+            
             // Seriesの作成と値の追加
-            Series seriesStep = new Series();
-            seriesStep.ChartType = SeriesChartType.Line;
-            graph.ChartAreas[0].AxisX.Maximum = 2; //そのグラフの最小値
-            graph.ChartAreas[0].AxisX.Minimum = -2; //そのグラフの最大値
-            graph.ChartAreas[0].AxisX.Interval = 1; //目盛りの間隔（最大値と最小値の設定が必要）
+            int axisX_max = 1024;
+            int axisX_min = 0;
+            graph.ChartAreas[0].AxisX.Maximum = axisX_max; //そのグラフの最小値
+            graph.ChartAreas[0].AxisX.Minimum = axisX_min; //そのグラフの最大値
+            graph.ChartAreas[0].AxisY.Maximum = 1.0;
+            graph.ChartAreas[0].AxisY.Minimum = -1.0;
+            //Series temp = new Series();
+            Series[] plotSeries = new Series[2];
+            for (int i = 0; i < plotSeries.Length; i++) {
+                plotSeries[i] = new Series();
+                plotSeries[i].ChartType = SeriesChartType.Line;
+                plotSeries[i].MarkerStyle = MarkerStyle.Circle;
+                plotSeries[i].MarkerSize = 2;
+            }            
 
-            int y = 0; //ステップ関数の初期値
-            for (double x = -2; x <= 2; x = x + 0.001)
+            float[][][] audio_buffer = _cLIWrapperClass.GetAudioBuffer();
+            float y = 0;
+            for (int i = 0; i < plotSeries.Length; i++)
             {
-                if (x > 0)
+                for (int x = axisX_min; x < axisX_max; x++)
                 {
-                    y = 1;  //0を超えたら1を出力
+                    y = audio_buffer[i][0][x]; //plot ch 0
+                    plotSeries[i].Points.AddXY(x, y);
+                    plotSeries[i].BorderWidth = 1;
                 }
-                seriesStep.Points.AddXY(x, y);
-                seriesStep.BorderWidth = 3;
+                graph.Series.Add(plotSeries[i]);
             }
-            graph.Series.Add(seriesStep);
         }
     }
 }

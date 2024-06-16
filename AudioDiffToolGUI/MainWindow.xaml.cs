@@ -84,7 +84,7 @@ namespace AudioDiffToolGUI
 
         private void Button_Click_Chart(object sender, RoutedEventArgs e)
         {
-            ChartWindow chartWindow = new ChartWindow();
+            ChartWindow chartWindow = new ChartWindow(cLIWrapperClass);
             var temp = cLIWrapperClass.GetAudioBuffer();
             chartWindow.Show();
         }
